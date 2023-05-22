@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { Auth, db } from "../../util/firebase.util";
-import { ref, set } from "firebase/database";
-import Data from "../../assets/Data.json";
+import { Auth, createDocumentFromUserAuth } from "../../util/firebase.util";
 
 const SignUp = () => {
   type FormTypes = {
@@ -10,7 +8,6 @@ const SignUp = () => {
     password: string;
     confirmPassword: string;
   };
-  console.log(Auth?.currentUser);
   2;
   const defaultFormFields: FormTypes = {
     email: "",
@@ -18,9 +15,8 @@ const SignUp = () => {
     confirmPassword: "",
   };
   const [formFields, setFormFields] = useState(defaultFormFields);
-  console.log(formFields);
 
-  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { value, name } = e.target;
     setFormFields((prev) => {
       return {
@@ -30,7 +26,9 @@ const SignUp = () => {
     });
   };
 
-  const submitHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const submitHandler = async (
+    e: React.MouseEvent<HTMLButtonElement>
+  ): Promise<void> => {
     e.preventDefault();
     const { email, password, confirmPassword } = formFields;
     if (password !== confirmPassword) return;
@@ -40,9 +38,9 @@ const SignUp = () => {
         email,
         password
       );
-      const userId = createUser.user.uid;
-      const userRef = ref(db, `user/${userId}`);
-      set(userRef, { Data });
+      const { user } = createUser;
+
+      await createDocumentFromUserAuth(user);
       alert("data added successfully ");
     } catch (error) {
       console.error("unhandled Error", error);

@@ -1,11 +1,13 @@
 // import Logo from '../../assets/logo.svg'
-
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { Auth, db } from "../../util/firebase.util";
+import { Auth, createDocumentFromUserAuth, db } from "../../util/firebase.util";
 import { useDispatch } from "react-redux";
 import { setCurrentUser } from "../../store/user/user.action";
 import { onValue, ref } from "firebase/database";
+import { setInvoicesMap } from "../../store/invoice/invoice.action";
+// import { setInvoicesMap } from "../../store/invoice/invoice.action";
+// import { onValue, ref } from "firebase/database";
 
 const SignIn = () => {
   const dispatch = useDispatch();
@@ -33,23 +35,27 @@ const SignIn = () => {
     setSignInForm(defaultFields);
   };
 
-  const sumbitHandler = async (
-    e: React.FormEvent<HTMLFormElement>
-  ): Promise<void> => {
+  const sumbitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { email, password } = signInForm;
     try {
       const { user } = await signInWithEmailAndPassword(Auth, email, password);
       dispatch(setCurrentUser(user));
       resetFormFields();
+      // const userRef = ref(db, `user/${uid}`);
+      // onValue(userRef, (snapshot) => {
+      //   const userData = snapshot.val();
+      //   dispatch(setInvoicesMap(userData));
+      // });
       const { uid } = user;
-      const userId = uid;
-      const userRef = ref(db, `user/${userId}`);
+      await createDocumentFromUserAuth(user);
+      const userRef = ref(db, `user/${uid}`);
       onValue(userRef, (snapshot) => {
         const userData = snapshot.val();
-        console.log(userData);
+        dispatch(setInvoicesMap(userData));
       });
-      alert("Sign In Successfuly Done");
+      // const userData = await createDocumentFromUserAuth(uid);
+      // dispatch(setInvoicesMap());
     } catch (error) {
       console.error(error);
     }
