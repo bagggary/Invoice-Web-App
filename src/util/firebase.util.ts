@@ -1,6 +1,12 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth, signOut } from "firebase/auth";
+import {
+  NextOrObserver,
+  User,
+  getAuth,
+  onAuthStateChanged,
+  signOut,
+} from "firebase/auth";
 import { getDatabase, onValue, ref, set } from "firebase/database";
 import Data from "../assets/Data.json";
 
@@ -18,10 +24,11 @@ export const app = initializeApp(firebaseConfig);
 export const Auth = getAuth(app);
 export const db = getDatabase();
 
-export const createDocumentFromUserAuth = async (userId: string | null) => {
+export const createDocumentFromUserAuth = async (user: any) => {
+  if (!user) return;
+  const { userId } = user;
   const userDocRef = ref(db, `user/${userId}`);
   onValue(userDocRef, async (snapshot) => {
-    console.log(snapshot.exists());
     if (!snapshot.exists()) {
       try {
         await set(userDocRef, { Data });
@@ -29,11 +36,13 @@ export const createDocumentFromUserAuth = async (userId: string | null) => {
         console.error("user Created Error ", error);
       }
     }
-    const userData = snapshot.val();
-    return userData;
+    return userDocRef;
   });
 };
 
 export const signOutUser = async () => {
   return await signOut(Auth);
 };
+
+export const onAuthStateChangedListener = (callback: NextOrObserver<User>) =>
+  onAuthStateChanged(Auth, callback);
