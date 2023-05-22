@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, signOut } from "firebase/auth";
 import { getDatabase, onValue, ref, set } from "firebase/database";
 import Data from "../assets/Data.json";
 
@@ -30,6 +30,10 @@ export const createDocumentFromUserAuth = async (userId: string | null) => {
       }
     }
     const userData = snapshot.val();
-    console.log(userData);
+    return userData;
   });
+};
+
+export const signOutUser = async () => {
+  return await signOut(Auth);
 };
