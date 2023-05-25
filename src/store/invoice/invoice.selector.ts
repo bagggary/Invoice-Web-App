@@ -1,2 +1,9 @@
 export const selectInvoicesData = (state: { invoices: { invoicesMap: any } }) =>
   state.invoices.invoicesMap;
+
+export const selectIsLoadingData = (state: {
+  invoices: { isLoading: boolean };
+}) => state.invoices.isLoading;
+
+export const selectErrorData = (state: { invoices: { error: any } }) =>
+  state.invoices.error;
