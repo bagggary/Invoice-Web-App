@@ -1,8 +1,10 @@
 import { AnyAction } from "redux";
-import { IVOICES_ACTION_TYPES } from "./invoice.types";
+import { INVOICES_ACTION_TYPES } from "./invoice.types";
 
 const INVOICES_INITIAL_STATE = {
   invoicesMap: {},
+  isLoading: false,
+  error: null,
 };
 
 export const invoiceReducer = (
@@ -11,8 +13,14 @@ export const invoiceReducer = (
 ) => {
   const { type, payload } = action;
   switch (type) {
-    case IVOICES_ACTION_TYPES.SET_INVOICES_DATA:
-      return { ...state, invoicesMap: payload };
+    case INVOICES_ACTION_TYPES.FETCH_INVOICES_START:
+      return { ...state, isLoading: true };
+    case INVOICES_ACTION_TYPES.FETCH_INVOICES_SUCCESS:
+      return { ...state, isLoading: false, invoicesMap: payload };
+    case INVOICES_ACTION_TYPES.FETCH_INVOICES_FAILED:
+      return { ...state, isLoading: false, error: payload };
+    case INVOICES_ACTION_TYPES.CLEAR_INVOICES:
+      return { ...state, invoicesMap: {} };
   }
   return state;
 };
