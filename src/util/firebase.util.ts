@@ -9,6 +9,9 @@ import {
 } from "firebase/auth";
 import { getDatabase, onValue, ref, set } from "firebase/database";
 import Data from "../assets/Data.json";
+// import { useSelector } from "react-redux";
+// import { selectCurrentUser } from "../store/user/user.selector";
+import { store } from "../store/store";
 
 const firebaseConfig = {
   apiKey: import.meta.env.REACT_APP_API_KEY,
@@ -28,15 +31,32 @@ export const createDocumentFromUserAuth = async (user: any) => {
   if (!user) return;
   const { userId } = user;
   const userDocRef = ref(db, `user/${userId}`);
-  onValue(userDocRef, async (snapshot) => {
-    if (!snapshot.exists()) {
-      try {
-        await set(userDocRef, { Data });
-      } catch (error) {
-        console.error("user Created Error ", error);
-      }
+  try {
+    await set(userDocRef, { Data });
+  } catch (error) {
+    console.error("user Created Error ", error);
+  }
+  return userDocRef;
+};
+
+export const getInvoicesAndDocument = async () => {
+  return new Promise((resolve, reject) => {
+    const { currentUser } = store.getState().user;
+    if (!currentUser) {
+      reject("no user found");
     }
-    return userDocRef;
+    const { uid } = currentUser;
+    const userRef = ref(db, `user/${uid}`);
+
+    onValue(
+      userRef,
+      (snapshot) => {
+        resolve(snapshot.val());
+      },
+      (error) => {
+        reject(error);
+      }
+    );
   });
 };
 
