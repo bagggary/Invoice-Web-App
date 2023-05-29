@@ -6,8 +6,10 @@ import { fetchInvoicesFailed, fetchInvoicesSuccess } from "./invoice.action";
 export function* fetchInvoicesAsync() {
   try {
     const invoicesArray = yield call(getInvoicesAndDocument);
+    console.log(invoicesArray);
     yield put(fetchInvoicesSuccess(invoicesArray));
   } catch (error: Error | any) {
+    console.log(error);
     yield put(fetchInvoicesFailed(error));
   }
 }
