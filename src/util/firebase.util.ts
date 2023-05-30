@@ -29,8 +29,8 @@ export const db = getDatabase();
 
 export const createDocumentFromUserAuth = async (user: any) => {
   if (!user) return;
-  const { userId } = user;
-  const userDocRef = ref(db, `user/${userId}`);
+  const { uid } = user;
+  const userDocRef = ref(db, `user/${uid}`);
   try {
     await set(userDocRef, { Data });
   } catch (error) {
@@ -38,7 +38,6 @@ export const createDocumentFromUserAuth = async (user: any) => {
   }
   return userDocRef;
 };
-
 export const getInvoicesAndDocument = async () => {
   return new Promise((resolve, reject) => {
     const { currentUser } = store.getState().user;
@@ -60,9 +59,7 @@ export const getInvoicesAndDocument = async () => {
   });
 };
 
-export const signOutUser = async () => {
-  return await signOut(Auth);
-};
+export const signOutUser = async () => await signOut(Auth);
 
 export const onAuthStateChangedListener = (callback: NextOrObserver<User>) =>
   onAuthStateChanged(Auth, callback);
