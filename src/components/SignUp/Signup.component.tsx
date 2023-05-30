@@ -16,6 +16,9 @@ const SignUp = () => {
   };
   const [formFields, setFormFields] = useState(defaultFormFields);
 
+  const resetFormFields = (): void => {
+    setFormFields(defaultFormFields);
+  };
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { value, name } = e.target;
     setFormFields((prev) => {
@@ -31,7 +34,9 @@ const SignUp = () => {
   ): Promise<void> => {
     e.preventDefault();
     const { email, password, confirmPassword } = formFields;
-    if (password !== confirmPassword) return;
+    if (password !== confirmPassword) {
+      alert("Password doesn't match ");
+    }
     try {
       const createUser = await createUserWithEmailAndPassword(
         Auth,
@@ -39,12 +44,11 @@ const SignUp = () => {
         password
       );
       const { user } = createUser;
-
       await createDocumentFromUserAuth(user);
-      alert("data added successfully ");
     } catch (error) {
       console.error("unhandled Error", error);
     }
+    resetFormFields();
   };
   return (
     <div className="flex  flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
@@ -77,6 +81,7 @@ const SignUp = () => {
                 type="email"
                 name="email"
                 id="email"
+                value={formFields.email}
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="name@company.com"
               />
@@ -93,6 +98,7 @@ const SignUp = () => {
                 type="password"
                 name="password"
                 id="password"
+                value={formFields.password}
                 placeholder="••••••••"
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
@@ -109,6 +115,7 @@ const SignUp = () => {
                 type="password"
                 name="confirmPassword"
                 id="confirmPassword"
+                value={formFields.confirmPassword}
                 placeholder="••••••••"
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
