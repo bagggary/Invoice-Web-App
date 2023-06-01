@@ -8,7 +8,7 @@ export const fetchInvoicesStart = () => {
   return { type: INVOICES_ACTION_TYPES.FETCH_INVOICES_START };
 };
 
-export const fetchInvoicesSuccess = (invoices) => {
+export const fetchInvoicesSuccess = (invoices: any) => {
   return {
     type: INVOICES_ACTION_TYPES.FETCH_INVOICES_SUCCESS,
     payload: invoices,
