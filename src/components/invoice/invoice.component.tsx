@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import rightarrow from "../../assets/icon-arrow-right.svg";
 import Status from "../status/status.component";
 
@@ -22,7 +23,10 @@ const Invoice: React.FC<InvoiceProps> = ({ data }) => {
   });
 
   return (
-    <div className=" border dark:bg-blue-dark hover:border-solid hover:shadow-none border-transparent duration-200 ease-linear hover:border-primary flex  justify-between items-center pl-8 pr-6 py-6 rounded-lg cursor-pointer">
+    <Link
+      to={`/home/${id}`}
+      className=" border dark:bg-blue-dark hover:border-solid hover:shadow-none border-transparent duration-200 ease-linear hover:border-primary flex  justify-between items-center pl-8 pr-6 py-6 rounded-lg cursor-pointer"
+    >
       <div className="flex justify-between items-center mr-[2em]">
         <div className=" text-sm font-bold mr-[1.75rem] dark:text-white text-black-1 ">
           <span className=" text-torko">#</span>
@@ -51,7 +55,7 @@ const Invoice: React.FC<InvoiceProps> = ({ data }) => {
           <img src={rightarrow} alt="rightarrow" className=" ml-5" />
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 
