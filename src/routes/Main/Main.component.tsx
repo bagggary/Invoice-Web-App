@@ -1,49 +1,33 @@
-import { useDispatch, useSelector } from "react-redux";
-import {
-  selectInvoicesData,
-  selectIsLoadingData,
-} from "../../store/invoice/invoice.selector";
-import { signOutUser } from "../../util/firebase.util";
-import { clearInvoices } from "../../store/invoice/invoice.action";
+import { useSelector } from "react-redux";
+// import { selectIsLoadingData } from "../../store/invoice/invoice.selector";
+
 import { useNavigate } from "react-router-dom";
 import { selectCurrentUser } from "../../store/user/user.selector";
 import { useEffect } from "react";
+import Home from "../../components/home/home.component";
+import { Outlet } from "react-router-dom";
 
 const Main = () => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const navigate = useNavigate();
-  const Loading = useSelector(selectIsLoadingData);
-  const Data = useSelector(selectInvoicesData);
+  // const Loading = useSelector(selectIsLoadingData);
+  // const Data = useSelector(selectInvoicesData);
   const user = useSelector(selectCurrentUser);
-  const signOutHandler = async () => {
-    await signOutUser();
-    dispatch(clearInvoices());
-    navigate("/");
-  };
+  // const signOutHandler = async () => {
+  //   await signOutUser();
+  //   dispatch(clearInvoices());
+  //   navigate("/");
+  // };
   useEffect(() => {
     if (!user) {
       navigate("/");
     }
   }, []);
   return (
-    <div>
-      {Loading ? (
-        <div>Loading...</div>
-      ) : (
-        <div>
-          <button
-            onClick={signOutHandler}
-            type="button"
-            className="p-2 bg-teal-500 rounded-md m-4"
-          >
-            Sign Out
-          </button>
-          Data:
-          <pre>{JSON.stringify(Data, null, 2)}</pre>
-        </div>
-      )}
-    </div>
+    <>
+      <Outlet />
+      <Home />
+    </>
   );
 };
-
 export default Main;
