@@ -31,7 +31,7 @@ const Details = () => {
   console.log(items);
 
   return (
-    <div className="md:pt-[72px] md:max-w-[60%] md:pl-[6rem] md:pr-[5rem] md:min-w-[730px]  py-14  mx-auto">
+    <div className="md:pt-[72px] w-[90%]  md:pr-[5rem] md:min-w-[730px] md:pl-[5rem] lg:pl-0 md:w-[730px] py-14  mx-auto">
       <Link to=".." className="flex items-center gap-6 cursor-pointer ">
         <img src={backArrow} alt="back arrow" />
         <p className="font-bold text-sm hover:text-torko dark:text-white">
@@ -50,10 +50,12 @@ const Details = () => {
           </p>
           <Status status={status} />
         </div>
-        <div className="flex items-center gap-2">
-          <Button text="Edit" type="secondry" />
-          <Button text="Delete" type="danger" />
-          <Button text="Mark as Paid" type="primary" />
+        <div className=" fixed bottom-0 bg-red-light sm:bg-transparent  sm:static sm: flex items-center">
+          <div className="flex items-center gap-2">
+            <Button text="Edit" type="secondry" />
+            <Button text="Delete" type="danger" />
+            <Button text="Mark as Paid" type="primary" />
+          </div>
         </div>
       </div>
       {/*  */}
