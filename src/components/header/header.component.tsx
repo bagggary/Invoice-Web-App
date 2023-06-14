@@ -1,23 +1,31 @@
-import downarrow from "../../assets/icon-arrow-down.svg";
+import { useDispatch } from "react-redux";
 import plusicon from "../../assets/icon-plus.svg";
+import { setNewForm } from "../../store/switch/switch.action";
+import StatusDropdown from "../statusDropdown/statusDropdown.component";
 
 const Header = () => {
+  const dispatch = useDispatch();
   return (
     <div className="flex justify-between items-center">
       <div>
-        <h1 className=" text-[32px] font-bold">invoices</h1>
-        <p className="text-xs font-medium">No Invoices </p>
+        <h1 className=" text-[20px]  sm:text-[32px] font-bold dark:text-white">
+          invoices
+        </h1>
+        <p className="text-sm font-medium text-dark-gray dark:text-gray-light">
+          No Invoices
+        </p>
       </div>
       <div className="flex gap-10">
-        <div className="flex gap-4 items-center">
-          <div className="text-xs font-bold">Filter by status</div>
-          <img src={downarrow} alt="downarrow" />
-        </div>
-        <div className="flex bg-primary rounded-3xl pl-2 text-white items-center  gap-4 w-[150px] h-12 text-xs font-bold ">
+        <StatusDropdown />
+        <div
+          onClick={() => dispatch(setNewForm(true))}
+          className="flex bg-primary rounded-3xl hover:bg-secondry cursor-pointer duration-200 transition-all pl-[6px] pr sm:pl-2 text-white items-center w-[90px] h-10 gap-2  sm:gap-4 sm:w-[150px] sm:h-12 text-sm font-bold "
+        >
           <div className=" h-8 w-8  bg-white  flex justify-center items-center rounded-full ">
             <img src={plusicon} alt="plusicon" />
           </div>
-          New Invoice
+          <p className="sm:block hidden">New Invoice</p>
+          <p className="block sm:hidden py-[15px] pr-[14px]">New</p>
         </div>
       </div>
     </div>
