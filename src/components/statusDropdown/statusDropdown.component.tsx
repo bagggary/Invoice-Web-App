@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import downarrow from "../../assets/icon-arrow-down.svg";
 import { useToggle } from "../../util/hooks/useToggle.hooks";
 import { useSearchParams } from "react-router-dom";
@@ -7,7 +7,7 @@ const StatusDropdown = () => {
   const [showStatus, setShowStatus] = useToggle();
   const ref = useRef<HTMLDivElement>(null);
   const [searchParams, setSearchParams] = useSearchParams();
-  const Navigate = useNavigate();
+  const [selectedStatus, setSelectedStatus] = useState("");
 
   useEffect(() => {
     const handleClickOff = (e: MouseEvent) => {
@@ -23,9 +23,13 @@ const StatusDropdown = () => {
   const handleSearchQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
       console.log(e.target.name, "checked");
+      setSelectedStatus(e.target.name);
       setSearchParams({ status: e.target.name });
+      setShowStatus.off();
     } else {
+      setSelectedStatus("");
       setSearchParams({});
+      setShowStatus.off();
     }
   };
   const status = ["Draft", "Pending", "Paid"];
@@ -62,6 +66,7 @@ const StatusDropdown = () => {
                 id={stat}
                 name={stat}
                 onChange={handleSearchQuery}
+                checked={selectedStatus === stat}
               />
               <label
                 htmlFor={stat}
