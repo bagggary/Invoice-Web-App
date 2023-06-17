@@ -12,14 +12,18 @@
   "dependencies": {
     "@types/redux-logger": "^3.0.9",
     "@types/redux-saga": "^0.10.5",
+    "date-fns": "^2.30.0",
     "dotenv": "^16.0.3",
     "firebase": "^9.21.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^8.0.5",
+    "react-router-dom": "^6.11.2",
     "redux": "^4.2.1",
     "redux-logger": "^3.0.6",
-    "redux-saga": "^1.2.3"
+    "redux-saga": "^1.2.3",
+    "reselect": "^4.1.8",
+    "vite-plugin-svgr": "^3.2.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.28",
