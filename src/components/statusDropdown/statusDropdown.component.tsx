@@ -2,11 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import downarrow from "../../assets/icon-arrow-down.svg";
 import { useToggle } from "../../util/hooks/useToggle.hooks";
 import { useSearchParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 const StatusDropdown = () => {
   const [showStatus, setShowStatus] = useToggle();
   const ref = useRef<HTMLDivElement>(null);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [_, setSearchParams] = useSearchParams();
   const [selectedStatus, setSelectedStatus] = useState("");
 
   useEffect(() => {
@@ -22,7 +21,6 @@ const StatusDropdown = () => {
   });
   const handleSearchQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
-      console.log(e.target.name, "checked");
       setSelectedStatus(e.target.name);
       setSearchParams({ status: e.target.name });
       setShowStatus.off();
