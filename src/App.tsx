@@ -25,13 +25,15 @@ function App() {
   }, []);
 
   return (
-    <Routes>
-      <Route path="/" element={<Authentication />} />
-      <Route path="/home" element={<Sidebar />}>
-        <Route index element={<Main />} />
-        <Route path=":Id" element={<Details />} />
-      </Route>
-    </Routes>
+    <div className=" bg-[#F8F8FB] dark:bg-black  ">
+      <Routes>
+        <Route path="/" element={<Authentication />} />
+        <Route path="/home" element={<Sidebar />}>
+          <Route index element={<Main />} />
+          <Route path=":Id" element={<Details />} />
+        </Route>
+      </Routes>
+    </div>
   );
 }
 
