@@ -1,6 +1,5 @@
 import { DatePicker } from "../dataPicker/DataPicker.component";
 import Dropdown from "../dropdown/dropdown.component";
-import { ReactComponent as Delete } from "../../assets/icon-delete.svg";
 import Button from "../button/Button.component";
 import { useDispatch, useSelector } from "react-redux";
 import { selectNewform } from "../../store/switch/switch.selector";
@@ -10,7 +9,6 @@ import { setNewForm } from "../../store/switch/switch.action";
 const NewForm = () => {
   const ref = useRef<HTMLDivElement>(null);
   const toggleNewForm = useSelector(selectNewform);
-  // const [showNewForm, toggleShowForm] = useToggle(toggleNewForm);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -31,27 +29,29 @@ const NewForm = () => {
   return (
     <>
       <div
-        className={`fixed w-[719px] top-0 ${
+        className={`fixed md:w-[719px] w-full top-0 ${
           !toggleNewForm ? "-translate-x-[40rem] invisible" : "translate-x-0"
-        } transition-all duration-300 ease-linear z-[3] left-0 pb-8 rounded-r-[20px]  pt-14 pr-14 overflow-auto  h-screen bottom-0 bg-white pl-[160px]`}
+        } transition-all dark:bg-black duration-300 ease-linear z-[3] left-0 pb-8 rounded-r-[20px]  pt-14 pr-14 overflow-auto  h-screen bottom-0 bg-white pl-[160px]`}
         ref={ref}
       >
-        <h2 className="font-bold text-2xl text-black-1">New Invoice</h2>
+        <h2 className="font-bold  text-2xl text-black-1 dark:text-white">
+          New Invoice
+        </h2>
         <form className="mt-12">
           {/* bill from container */}
           <div className="flex flex-col gap-6">
-            <h2 className="font-bold text-sm text-primary">Bill From</h2>
+            <h2 className="font-bold text-sm text-primary ">Bill From</h2>
             <div className="flex flex-col gap-[10px]">
               <label
                 htmlFor="st-add"
-                className="font-medium text-sm text-torko"
+                className="font-medium text-sm text-torko dark:text-gray-light"
               >
                 Street Address
               </label>
               <input
                 type="text"
                 id="st-add"
-                className="h-12  border border-gray-light  py-4 px-5"
+                className="h-12  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
               />
             </div>
             {/*  */}
@@ -72,7 +72,7 @@ const NewForm = () => {
                 <input
                   type="text"
                   id="sd-city"
-                  className="h-12  border border-gray-light py-4 px-5"
+                  className="h-12  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
                 />
               </div>
 
@@ -86,7 +86,7 @@ const NewForm = () => {
                 <input
                   type="text"
                   id="sd-postcode"
-                  className="h-12  border border-gray-light  py-4 px-5"
+                  className="h-12  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
                 />
               </div>
 
@@ -100,7 +100,7 @@ const NewForm = () => {
                 <input
                   type="text"
                   id="sd-country"
-                  className="h-12  border border-gray-light  py-4 px-5"
+                  className="h-12  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
                 />
               </div>
             </div>
@@ -118,7 +118,7 @@ const NewForm = () => {
               <input
                 type="text"
                 id="to-name"
-                className="h-12  border border-gray-light  py-4 px-5"
+                className="h-12  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
               />
             </div>
             <div className="flex flex-col gap-[10px]">
@@ -131,7 +131,7 @@ const NewForm = () => {
               <input
                 type="email"
                 id="to-email"
-                className="h-12  border border-gray-light  py-4 px-5"
+                className="h-12  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
                 placeholder="e.g. email@example.com"
               />
             </div>
@@ -146,7 +146,7 @@ const NewForm = () => {
                 <input
                   type="text"
                   id="st-city"
-                  className="h-12  border border-gray-light py-4 px-5"
+                  className="h-12  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
                 />
               </div>
 
@@ -160,7 +160,7 @@ const NewForm = () => {
                 <input
                   type="text"
                   id="st-postcode"
-                  className="h-12  border border-gray-light  py-4 px-5"
+                  className="h-12  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
                 />
               </div>
 
@@ -174,7 +174,7 @@ const NewForm = () => {
                 <input
                   type="text"
                   id="st-country"
-                  className="h-12  border border-gray-light  py-4 px-5"
+                  className="h-12 border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
                 />
               </div>
             </div>
@@ -192,44 +192,74 @@ const NewForm = () => {
               <input
                 type="text"
                 id="pj-desc"
-                className="h-12  border border-gray-light  py-4 px-5"
+                className="h-12 border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
               />
             </div>
-            <div className="flex flex-col gap-4 ">
+            <div className="flex flex-col w-full gap-4 ">
               <h2 className="font-bold text-lg text-[#777F98]">Item List</h2>
               {/* item list container */}
-              <div>
-                <div className="flex w-full  gap-4">
+
+              {/*  */}
+              {/*  */}
+              {/*  */}
+              {/*  */}
+              {/*  */}
+              {/*  */}
+              {/*  */}
+              {/*  */}
+
+              <div className="block md:flex gap-6">
+                <div className="flex flex-col gap-4 w-full ">
+                  <label htmlFor="item-1">Item Name</label>
+                  <input
+                    type="text"
+                    className="h-12 border border-gray-light rounded-[4px] hover:border-primary "
+                  />
+                </div>
+
+                <div className="grid grid-cols-[25%_25%_0.9fr_0.9fr] place-content-center items-center gap-x-4">
                   <div className="flex flex-col gap-4">
-                    <label htmlFor="item-1">Item Name</label>
+                    <label htmlFor="qty-1">QTY.</label>
                     <input
                       type="text"
-                      className="h-12 border border-gray-light hover:border-primary "
+                      className="h-12 w-full border border-gray-light hover:border-primary cursor-pointer text-center"
                     />
                   </div>
-                  <div className="flex gap-4">
-                    <div className="flex flex-col gap-4">
-                      <label htmlFor="qty-1">QTY.</label>
-                      <input
-                        type="text"
-                        className="h-12 w-[46px] border border-gray-light hover:border-primary cursor-pointer text-center"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-4">
-                      <label htmlFor="price-1">Price</label>
-                      <input
-                        type="text"
-                        className="h-12 w-[100px] border border-gray-light hover:border-primary cursor-pointer py-4 pl-5"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-4 content-center">
-                      <div className="self-start">Total</div>
-                      <p className="h-12 flex ">0.00</p>
-                    </div>
-                    <Delete className="self-center flex " />
+                  <div className="flex flex-col gap-4">
+                    <label htmlFor="price-1">Price</label>
+                    <input
+                      type="text"
+                      className="h-12 w-full border border-gray-light hover:border-primary cursor-pointer py-4 pl-5"
+                    />
                   </div>
+                  <div className="flex flex-col self-start gap-4 content-center">
+                    <div>Total</div>
+                    <p className="mt-4">0.00</p>
+                  </div>
+                  <button>
+                    <svg
+                      width="13"
+                      height="16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M11.583 3.556v10.666c0 .982-.795 1.778-1.777 1.778H2.694a1.777 1.777 0 01-1.777-1.778V3.556h10.666zM8.473 0l.888.889h3.111v1.778H.028V.889h3.11L4.029 0h4.444z"
+                        fill="#888EB0"
+                        fill-rule="nonzero"
+                        className=" hover:fill-primary"
+                      />
+                    </svg>
+                  </button>
                 </div>
               </div>
+              {/*  */}
+              {/*  */}
+              {/*  */}
+              {/*  */}
+              {/*  */}
+              {/*  */}
+              {/*  */}
+              {/*  */}
               {/* item list container */}
               <button
                 type="button"
