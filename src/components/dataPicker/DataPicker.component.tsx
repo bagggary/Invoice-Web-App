@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import { useToggle } from "../../util/hooks/useToggle.hooks";
-import { getDaysInMonth, format, getYear, fromUnixTime } from "date-fns";
+import { getDaysInMonth, format, getYear } from "date-fns";
 import rightArrow from "../../assets/icon-arrow-right.svg";
 import leftArrow from "../../assets/icon-arrow-left.svg";
 import { ReactComponent as Calender } from "../../assets/icon-calendar.svg";
@@ -105,7 +105,7 @@ export const DatePicker = ({}) => {
             ref={inputRef}
             // value={format(selectedDate, "dd MMM yyyy")}
             placeholder={format(selectedDate, "dd MMM yyyy")}
-            className="h-[3rem] py-4 pl-5 w-full text-sm text-black-1 rounded-md border border-gray-light font-bold cursor-pointer"
+            className="h-[3rem] dark:border-blue-light dark:bg-blue-dark py-4 pl-5 w-full text-sm text-black-1 rounded-md border border-gray-light font-bold cursor-pointer"
             onFocus={openHandlers.on}
             type="text"
           />
@@ -116,12 +116,12 @@ export const DatePicker = ({}) => {
         </div>
       </div>
       {open && (
-        <div className="absolute top-[105%] left-0 max-w-[240px] w-full bg-whtie min-h-[243px] text-center rounded-lg z-[4] shadow-sm">
-          <div className="flex items-center justify-between mb-4">
+        <div className="absolute bg-white dark:bg-blue-light top-[105%] left-0 max-w-[240px] py-6 px-5 w-full bg-whtie min-h-[243px] text-center rounded-lg z-[4] shadow-sm">
+          <div className="flex w-[192px] mx-auto  items-center justify-between mb-4">
             <button type="button" onClick={handlePrevMonth}>
               <img src={leftArrow} alt="Prev Month Icon" />
             </button>
-            <p>
+            <p className="text-black-1 dark:text-gray-light">
               {format(new Date(currentYear, currentMonth), "MMM")} {currentYear}
             </p>
             <button type="button" onClick={handleNextMonth}>
@@ -143,7 +143,10 @@ export const DatePicker = ({}) => {
                     {p}
                   </p>
                 ) : (
-                  <p key={i} onClick={() => handleDateSelect(p)}>
+                  <p
+                    className=" cursor-pointer text-black-1 hover:text-primary dark:text-gray-light dark:hover:text-primary"
+                    onClick={() => handleDateSelect(p)}
+                  >
                     {p}
                   </p>
                   // <Calender />
