@@ -10,9 +10,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <Provider store={store}>
       <Router>
-        <div className=" bg-[#F8F8FB] dark:bg-black ">
-          <App />
-        </div>
+        <App />
       </Router>
     </Provider>
   </React.StrictMode>
