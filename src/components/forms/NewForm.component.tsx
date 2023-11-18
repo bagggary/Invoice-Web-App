@@ -37,7 +37,7 @@ const NewForm = () => {
         <h2 className="font-bold  text-2xl text-black-1 dark:text-white">
           New Invoice
         </h2>
-        <form className="mt-12">
+        <form className="mt-12 flex flex-col gap-12">
           {/* bill from container */}
           <div className="flex flex-col gap-6">
             <h2 className="font-bold text-sm text-primary ">Bill From</h2>
@@ -54,10 +54,6 @@ const NewForm = () => {
                 className="h-12  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
               />
             </div>
-            {/*  */}
-            {/*  */}
-            {/*  */}
-            {/*  */}
             {/*  */}
             {/*  */}
             {/*  */}
@@ -105,7 +101,11 @@ const NewForm = () => {
               </div>
             </div>
           </div>
-          {/* bill from container */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/*  */}
+          {/* bill to container */}
           <div className="flex flex-col gap-6">
             <h2 className="font-bold text-sm text-primary">Bill To</h2>
             <div className="flex flex-col gap-[10px]">
