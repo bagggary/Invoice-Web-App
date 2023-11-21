@@ -10,7 +10,6 @@ const NewForm = () => {
   const ref = useRef<HTMLDivElement>(null);
   const toggleNewForm = useSelector(selectNewform);
   const dispatch = useDispatch();
-
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (toggleNewForm) {
@@ -19,7 +18,6 @@ const NewForm = () => {
         }
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -29,9 +27,9 @@ const NewForm = () => {
   return (
     <>
       <div
-        className={`fixed md:w-[719px] w-full top-0 ${
+        className={`fixed md:w-[719px] sm:w-[616px]  w-full top-0 ${
           !toggleNewForm ? "-translate-x-[40rem] invisible" : "translate-x-0"
-        } transition-all dark:bg-black duration-300 ease-linear z-[3] left-0 pb-8 rounded-r-[20px]  pt-14 pr-14 overflow-auto  h-screen bottom-0 bg-white pl-[160px]`}
+        } transition-all dark:bg-black duration-300 ease-linear z-[3] left-0 pb-8 sm:rounded-r-[20px]  pt-14 pr-14 overflow-auto  h-screen bottom-0 bg-white md:pl-[160px] pl-6 sm:pl-14 `}
         ref={ref}
       >
         <h2 className="font-bold  text-2xl text-black-1 dark:text-white">
@@ -41,7 +39,7 @@ const NewForm = () => {
           {/* bill from container */}
           <div className="flex flex-col gap-6">
             <h2 className="font-bold text-sm text-primary ">Bill From</h2>
-            <div className="flex flex-col gap-[10px]">
+            <div className="flex w-full flex-col gap-[10px]">
               <label
                 htmlFor="st-add"
                 className="font-medium text-sm text-torko dark:text-gray-light"
@@ -57,11 +55,12 @@ const NewForm = () => {
             {/*  */}
             {/*  */}
             {/*  */}
-            <div className="flex gap-6">
-              <div className=" w-[152px] flex flex-col gap-[10px]">
+
+            <div className="flex gap-6  ">
+              <div className=" w-1/3 flex flex-grow flex-col gap-[10px]">
                 <label
                   htmlFor="sd-city"
-                  className="font-medium  text-sm text-torko"
+                  className=" flex-grow flex-shrink font-medium  text-sm text-torko"
                 >
                   City
                 </label>
@@ -72,7 +71,7 @@ const NewForm = () => {
                 />
               </div>
 
-              <div className=" w-[152px]  flex flex-col gap-[10px]">
+              <div className="  w-1/3 flex-grow flex flex-col gap-[10px]">
                 <label
                   htmlFor="sd-postcode"
                   className="font-medium text-sm text-torko"
@@ -86,7 +85,7 @@ const NewForm = () => {
                 />
               </div>
 
-              <div className=" w-[152px] flex flex-col gap-[10px]">
+              <div className="  w-1/3 flex-grow flex flex-col gap-[10px]">
                 <label
                   htmlFor="sd-country"
                   className="font-medium text-sm text-torko"
@@ -101,10 +100,6 @@ const NewForm = () => {
               </div>
             </div>
           </div>
-          {/*  */}
-          {/*  */}
-          {/*  */}
-          {/*  */}
           {/* bill to container */}
           <div className="flex flex-col gap-6">
             <h2 className="font-bold text-sm text-primary">Bill To</h2>
