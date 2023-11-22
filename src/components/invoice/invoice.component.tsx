@@ -64,6 +64,3 @@ const Invoice: React.FC<InvoiceProps> = ({ data }) => {
 };
 
 export default Invoice;
-
-// (
-// );

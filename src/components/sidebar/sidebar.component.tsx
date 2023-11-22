@@ -26,7 +26,7 @@ function Sidebar() {
   //class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
   return (
     <>
-      <aside className=" md:z-10 fixed bg-[#373B53] md:h-screen md:left-0 top-0  h-20 md:w-[103px] w-full  md:rounded-r-[20px] flex md:flex-col justify-between">
+      <aside className=" md:z-10 z-10  fixed bg-[#373B53] md:h-screen md:left-0 top-0  h-20 md:w-[103px] w-full  md:rounded-r-[20px] flex md:flex-col justify-between">
         <div className="md:w-full md:h-[103px] h-20 w-20 bg-primary flex justify-center items-center rounded-r-[20px] relative overflow-hidden">
           <div className="absolute w-full h-full top-[50%] bg-secondry rounded-l-[20px] "></div>
           <img

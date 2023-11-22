@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectNewform } from "../../store/switch/switch.selector";
 import { useEffect, useRef } from "react";
 import { setNewForm } from "../../store/switch/switch.action";
+import backArrow from "../../assets/icon-arrow-left.svg";
 
 const NewForm = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -24,15 +25,28 @@ const NewForm = () => {
     };
   }, [toggleNewForm]);
 
+  const backClickChange = (): void => {
+    dispatch(setNewForm(false));
+  };
+
   return (
     <>
       <div
         className={`fixed md:w-[719px] sm:w-[616px]  w-full top-0 ${
           !toggleNewForm ? "-translate-x-[40rem] invisible" : "translate-x-0"
-        } transition-all dark:bg-black duration-300 ease-linear z-[3] left-0 pb-8 sm:rounded-r-[20px]  pt-14 pr-14 overflow-auto  h-screen bottom-0 bg-white md:pl-[160px] pl-6 sm:pl-14 `}
+        } transition-all dark:bg-black duration-300 ease-linear z-[3] left-0 pb-8 sm:rounded-r-[20px]  md:pt-14 pt-[136px] md:pr-14 overflow-auto  h-screen bottom-0 bg-white md:pl-[160px] px-6 sm:pl-14 `}
         ref={ref}
       >
-        <h2 className="font-bold  text-2xl text-black-1 dark:text-white">
+        <div
+          onClick={backClickChange}
+          className=" md:hidden  flex gap-6 items-center cursor-pointer"
+        >
+          <img src={backArrow} alt="back arrow" />
+          <p className="font-bold text-sm hover:text-torko dark:text-white">
+            Go back
+          </p>
+        </div>
+        <h2 className="font-bold mt-6  text-2xl text-black-1 dark:text-white">
           New Invoice
         </h2>
         <form className="mt-12 flex flex-col gap-12">
@@ -56,7 +70,7 @@ const NewForm = () => {
             {/*  */}
             {/*  */}
 
-            <div className="flex gap-6  ">
+            <div className="flex gap-6 sm:max-w-[calc(100%-48px)]  sm:flex-nowrap flex-wrap ">
               <div className=" w-1/3 flex flex-grow flex-col gap-[10px]">
                 <label
                   htmlFor="sd-city"
@@ -130,8 +144,8 @@ const NewForm = () => {
                 placeholder="e.g. email@example.com"
               />
             </div>
-            <div className="flex gap-6">
-              <div className=" w-[152px] flex flex-col gap-[10px]">
+            <div className="flex gap-6 sm:max-w-[calc(100%-48px)]  sm:flex-nowrap flex-wrap ">
+              <div className=" w-1/3 flex-grow flex flex-col gap-[10px]">
                 <label
                   htmlFor="st-city"
                   className="font-medium  text-sm text-torko"
@@ -145,7 +159,7 @@ const NewForm = () => {
                 />
               </div>
 
-              <div className=" w-[152px]  flex flex-col gap-[10px]">
+              <div className=" w-1/3 flex-grow  flex flex-col gap-[10px]">
                 <label
                   htmlFor="st-postcode"
                   className="font-medium text-sm text-torko"
@@ -159,7 +173,7 @@ const NewForm = () => {
                 />
               </div>
 
-              <div className=" w-[152px] flex flex-col gap-[10px]">
+              <div className=" w-1/3 flex flex-grow flex-col gap-[10px]">
                 <label
                   htmlFor="st-country"
                   className="font-medium text-sm text-torko"
@@ -173,7 +187,7 @@ const NewForm = () => {
                 />
               </div>
             </div>
-            <div className="flex gap-6">
+            <div className="flex flex-col ">
               <DatePicker />
               <Dropdown />
             </div>
@@ -216,39 +230,7 @@ const NewForm = () => {
                     className="h-12 border py-4 px-5  dark:bg-blue-dark dark:hover:border-primary  dark:border-[#252945] cursor-pointer border-gray-light rounded-[4px] text-black-1 dark:text-white font-bold text-sm hover:border-primary "
                   />
                 </div>
-
-                {/* .priceInfo {
-  display: grid;
-  place-items: center;
-  justify-items: center;
-  grid-template-columns: 25% 25% 0.9fr 0.9fr;
-  column-gap: 1rem;
-  margin-bottom: 3rem;
-  input {
-    padding-right: 0rem;
-  }
-
-  input:disabled {
-    border: none;
-    background: none;
-    color: $shipCove;
-    text-align: right;
-    padding: 0;
-  }
-  button {
-    border: none;
-    background: none;
-  }
-
-  @media (min-width: $tablet) {
-    margin-bottom: 1rem;
-
-    div {
-      margin-bottom: 1rem;
-    }
-  }
-} */}
-                <div className="grid grid-cols-[25%_25%_0.9fr_0.9fr] place-items-center justify-items-center gap-x-4 md:gap-y-0 gap-y-[18px] ">
+                <div className="md:mt-0 mt-6 grid grid-cols-[25%_25%_0.9fr_0.9fr] place-items-center justify-items-center gap-x-4 md:gap-y-0 gap-y-[18px] ">
                   <div className="flex flex-col md:gap-4 gap-[10px] pr-0">
                     <label
                       htmlFor="qty-1"

@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { selectCurrentUser } from "../../store/user/user.selector";
 import { useEffect } from "react";
 import Home from "../../components/home/home.component";
-import { Outlet } from "react-router-dom";
 
 const Main = () => {
   // const dispatch = useDispatch();
@@ -18,16 +17,13 @@ const Main = () => {
   //   dispatch(clearInvoices());
   //   navigate("/");
   // };
+
   useEffect(() => {
     if (!user) {
       navigate("/");
     }
   }, []);
-  return (
-    <>
-      <Outlet />
-      <Home />
-    </>
-  );
+
+  return <Home />;
 };
 export default Main;
