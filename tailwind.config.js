@@ -7,6 +7,9 @@ export default {
   ],
   theme: {
     extend: {
+      boxShadow: {
+        "3xl": "0px 10px 20px 0px rgba(72, 84, 159, 0.25)",
+      },
       content: {
         link: "url(./src/assets/icon-check.svg)",
       },

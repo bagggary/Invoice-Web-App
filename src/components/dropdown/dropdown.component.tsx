@@ -15,13 +15,13 @@ const Dropdown = () => {
   };
 
   return (
-    <div className="flex gap-[10px] flex-col">
-      <label htmlFor="dropdown" className="text-torko   font-medium text-sm ">
+    <div className="flex gap-[10px] flex-col ">
+      <label htmlFor="dropdown" className="text-torko font-medium text-sm ">
         Payments Terms
       </label>
       <div
         id="dropdown"
-        className=" relative cursor-pointer h-12 w-[240px] border bg-white dark:bg-blue-dark rounded-[4px] border-gray-light dark:border-blue-light flex justify-between items-center p-6"
+        className=" relative cursor-pointer h-12 w-full border hover:border-primary bg-white dark:bg-blue-dark rounded-[4px] border-gray-light dark:border-blue-light flex justify-between items-center p-6"
         onClick={dropDownHandler}
       >
         <p className="font-bold text-sm dark:text-white text-black-1">
@@ -37,7 +37,7 @@ const Dropdown = () => {
             show
               ? "opacity-100 translate-y-4 visible"
               : "opacity-0 translate-y-0 hidden"
-          } opacity-0  top-[2.5rem] left-0 bg-white dark:bg-blue-light  bg-red-white w-[240px] rounded-lg transition-all duration-300 ease-linear`}
+          } opacity-0  top-[2.5rem] left-0 bg-white shadow-3xl dark:bg-blue-light  bg-red-white w-full rounded-lg transition-all duration-300 ease-linear`}
         >
           {options?.map((term) => {
             return (
