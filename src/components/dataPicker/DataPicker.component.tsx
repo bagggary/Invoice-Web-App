@@ -92,7 +92,7 @@ export const DatePicker = ({}) => {
   };
 
   return (
-    <div ref={ref} className="relative mb-6">
+    <div ref={ref} className="relative mb-6 ">
       <div className="flex flex-col gap-[10px]">
         <label
           htmlFor="invoice-date"
@@ -100,7 +100,7 @@ export const DatePicker = ({}) => {
         >
           Invoice Date
         </label>
-        <div className="relative w-[240px]">
+        <div className="relative w-[100%] flex">
           <input
             ref={inputRef}
             // value={format(selectedDate, "dd MMM yyyy")}
@@ -116,8 +116,8 @@ export const DatePicker = ({}) => {
         </div>
       </div>
       {open && (
-        <div className="absolute bg-white dark:bg-blue-light top-[105%] left-0 max-w-[240px] py-6 px-5 w-full bg-whtie min-h-[243px] text-center rounded-lg z-[4] shadow-sm">
-          <div className="flex w-[192px] mx-auto  items-center justify-between mb-4">
+        <div className="absolute bg-white dark:bg-blue-light top-[105%] left-0 max-w-[100%] py-6 px-5 w-full bg-whtie min-h-[243px] text-center rounded-lg z-[4] shadow-sm">
+          <div className="flex w-[calc(100% - 48px)] mx-auto  items-center justify-between mb-4">
             <button type="button" onClick={handlePrevMonth}>
               <img src={leftArrow} alt="Prev Month Icon" />
             </button>
