@@ -1,19 +1,26 @@
+import { useCallback, useMemo, useState } from "react";
 import { ReactComponent as ArrowDown } from "../../assets/icon-arrow-down.svg";
 import { useToggle } from "../../util/hooks/useToggle.hooks";
 
-const options = [
-  { label: "Net 1 Day", value: 1 },
-  { label: "Net 7 Days", value: 7 },
-  { label: "Net 14 Days", value: 14 },
-  { label: "Net 30 Days", value: 30 },
-];
 const Dropdown = () => {
   const [show, showDrop] = useToggle();
+  const [terms, setTerms] = useState("");
 
-  const dropDownHandler = () => {
+  const options = useMemo(
+    () => [
+      { label: "Net 1 Day", value: 1 },
+      { label: "Net 7 Days", value: 7 },
+      { label: "Net 14 Days", value: 14 },
+      { label: "Net 30 Days", value: 30 },
+    ],
+    []
+  );
+  const dropDownHandler = useCallback(() => {
     showDrop.toggle();
-  };
-
+  }, [showDrop]);
+  const termsHandlers = useCallback((e): void => {
+    setTerms(e.target.textContent);
+  }, []);
   return (
     <div className="flex gap-[10px] flex-col ">
       <label htmlFor="dropdown" className="text-torko font-medium text-sm ">
@@ -25,7 +32,7 @@ const Dropdown = () => {
         onClick={dropDownHandler}
       >
         <p className="font-bold text-sm dark:text-white text-black-1">
-          Net 30 Days
+          {terms}
         </p>
         <ArrowDown
           className={`${
@@ -41,7 +48,10 @@ const Dropdown = () => {
         >
           {options?.map((term) => {
             return (
-              <div className=" cursor-pointer dark:gray-light dark:text-gray-light dark:hover:text-primary dark:border-blue-dark hover:text-primary text-sm font-bold text-black-1 border-b border-gray-light px-6 py-3 last:border-0">
+              <div
+                onClick={termsHandlers}
+                className=" cursor-pointer dark:gray-light dark:text-gray-light dark:hover:text-primary dark:border-blue-dark hover:text-primary text-sm font-bold text-black-1 border-b border-gray-light px-6 py-3 last:border-0"
+              >
                 {term.label}
               </div>
             );
