@@ -4,7 +4,6 @@ import { useToggle } from "../../util/hooks/useToggle.hooks";
 
 const Dropdown = () => {
   const [show, showDrop] = useToggle();
-  const [itemList, setItemList] = useState([{ item: "", qty: "", price: "" }]);
 
   const options = useMemo(
     () => [
