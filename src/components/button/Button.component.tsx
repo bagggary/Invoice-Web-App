@@ -9,7 +9,6 @@ const Button = ({ text, type }: { text: string; type: string }) => {
 
   return (
     <button
-      type="button"
       className={` px-6 py-4 ${ButtonStyle[type]} rounded-3xl font-bold text-sm outline-none`}
     >
       {text}
