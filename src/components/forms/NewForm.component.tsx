@@ -3,26 +3,38 @@ import Dropdown from "../dropdown/dropdown.component";
 import Button from "../button/Button.component";
 import { useDispatch, useSelector } from "react-redux";
 import { selectNewform } from "../../store/switch/switch.selector";
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { setNewForm } from "../../store/switch/switch.action";
 import backArrow from "../../assets/icon-arrow-left.svg";
 import ItemList from "../items/itemslist.component";
-import { ItemTypes } from "../items/itemslist.component";
-
+import { useForm } from "react-hook-form";
+import { DevTool } from "@hookform/devtools";
+import { FormValues, ItemTypes } from "../types/types";
 const NewForm = () => {
   const ref = useRef<HTMLDivElement>(null);
   const toggleNewForm = useSelector(selectNewform);
   const [itemList, setItemList] = useState<ItemTypes[]>([
-    { item: "", itemQty: 0, itemPrice: 0, itemTotal: 0, id: useId() },
+    { item: "", itemQty: 0, itemPrice: 0, itemTotal: 0 },
   ]);
 
+  const form = useForm<FormValues>({
+    defaultValues: {},
+  });
+  const { register, control, handleSubmit } = form;
   const uniqueID = () => {
     return (Math.random() * Date.now()).toString();
   };
 
-  const removeItemFields = (id: string) => {
-    const updatedItems = itemList.filter((itm) => itm.id != id);
-    setItemList(updatedItems);
+  const onSubmit = (data: FormValues) => {
+    console.log("form Submitted", data);
+  };
+
+  const removeItemFields = (index: number) => {
+    setItemList((prevItemList) => {
+      const data = [...prevItemList];
+      data.splice(index, 1);
+      return data;
+    });
   };
 
   const dispatch = useDispatch();
@@ -57,6 +69,10 @@ const NewForm = () => {
     dispatch(setNewForm(false));
   };
 
+  const handleRemove = (index: number) => {
+    removeItemFields(index);
+  };
+
   return (
     <>
       <div
@@ -77,20 +93,24 @@ const NewForm = () => {
         <h2 className="font-bold mt-6  text-2xl text-black-1 dark:text-white">
           New Invoice
         </h2>
-        <form className="mt-12 flex flex-col gap-12">
+        <form
+          className="mt-12 flex flex-col gap-12"
+          onSubmit={handleSubmit(onSubmit)}
+        >
           {/* bill from container */}
           <div className="flex flex-col gap-6">
             <h2 className="font-bold text-sm text-primary ">Bill From</h2>
             <div className="flex w-full flex-col gap-[10px]">
               <label
-                htmlFor="st-add"
+                htmlFor="senderStreet"
                 className="font-medium text-sm text-torko dark:text-gray-light"
               >
                 Street Address
               </label>
               <input
                 type="text"
-                id="st-add"
+                id="senderStreet"
+                {...register("senderAddress.street")}
                 className="h-12  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
               />
             </div>
@@ -101,42 +121,45 @@ const NewForm = () => {
             <div className="flex gap-6 sm:max-w-[calc(100%-48px)]  sm:flex-nowrap flex-wrap ">
               <div className=" w-1/3 flex flex-grow flex-col gap-[10px]">
                 <label
-                  htmlFor="sd-city"
+                  htmlFor="senderCity"
                   className=" flex-grow flex-shrink font-medium  text-sm text-torko"
                 >
                   City
                 </label>
                 <input
                   type="text"
-                  id="sd-city"
+                  id="senderCity"
+                  {...register("senderAddress.city")}
                   className="h-12  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
                 />
               </div>
 
               <div className="  w-1/3 flex-grow flex flex-col gap-[10px]">
                 <label
-                  htmlFor="sd-postcode"
+                  htmlFor="senderPostCode"
                   className="font-medium text-sm text-torko"
                 >
                   Post Code
                 </label>
                 <input
                   type="text"
-                  id="sd-postcode"
+                  id="senderPostCode"
+                  {...register("senderAddress.postCode")}
                   className="h-12  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
                 />
               </div>
 
               <div className="  w-1/3 flex-grow flex flex-col gap-[10px]">
                 <label
-                  htmlFor="sd-country"
+                  htmlFor="senderCountry"
                   className="font-medium text-sm text-torko"
                 >
                   Country
                 </label>
                 <input
                   type="text"
-                  id="sd-country"
+                  id="senderCountry"
+                  {...register("senderAddress.country")}
                   className="h-12  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
                 />
               </div>
@@ -147,70 +170,89 @@ const NewForm = () => {
             <h2 className="font-bold text-sm text-primary">Bill To</h2>
             <div className="flex flex-col gap-[10px]">
               <label
-                htmlFor="to-name"
+                htmlFor="clientName"
                 className="font-medium text-sm text-torko"
               >
                 Client's Name
               </label>
               <input
                 type="text"
-                id="to-name"
+                id="clientName"
+                {...register("clientName")}
                 className="h-12  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
               />
             </div>
             <div className="flex flex-col gap-[10px]">
               <label
-                htmlFor="to-email"
+                htmlFor="clientEmail"
                 className="font-medium text-sm text-torko"
               >
                 Client's Email
               </label>
               <input
                 type="email"
-                id="to-email"
+                id="clientEmail"
+                {...register("clientEmail")}
                 className="h-12  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
                 placeholder="e.g. email@example.com"
+              />
+            </div>
+            <div className="flex w-full flex-col gap-[10px]">
+              <label
+                htmlFor="clientStreet"
+                className="font-medium text-sm text-torko dark:text-gray-light"
+              >
+                Street Address
+              </label>
+              <input
+                type="text"
+                id="clientStreet"
+                {...register("clientAddress.street")}
+                className="h-12  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
               />
             </div>
             <div className="flex gap-6 sm:max-w-[calc(100%-48px)]  sm:flex-nowrap flex-wrap ">
               <div className=" w-1/3 flex-grow flex flex-col gap-[10px]">
                 <label
-                  htmlFor="st-city"
+                  htmlFor="clientCity"
                   className="font-medium  text-sm text-torko"
                 >
                   City
                 </label>
                 <input
                   type="text"
-                  id="st-city"
+                  id="clientCity"
+                  {...register("clientAddress.city")}
                   className="h-12  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
                 />
               </div>
 
               <div className=" w-1/3 flex-grow  flex flex-col gap-[10px]">
                 <label
-                  htmlFor="st-postcode"
+                  htmlFor="clientPostCode"
                   className="font-medium text-sm text-torko"
                 >
                   Post Code
                 </label>
                 <input
                   type="text"
-                  id="st-postcode"
+                  id="clientPostCode"
+                  {...register("clientAddress.postCode")}
                   className="h-12  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
                 />
               </div>
 
               <div className=" w-1/3 flex flex-grow flex-col gap-[10px]">
                 <label
-                  htmlFor="st-country"
+                  htmlFor="clientCountry"
                   className="font-medium text-sm text-torko"
                 >
                   Country
                 </label>
                 <input
                   type="text"
-                  id="st-country"
+                  id="clientCountry"
+                  {...register("clientAddress.country")}
                   className="h-12 border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
                 />
               </div>
@@ -221,14 +263,15 @@ const NewForm = () => {
             </div>
             <div className="flex flex-col gap-[10px]">
               <label
-                htmlFor="pj-desc"
+                htmlFor="description"
                 className="font-medium text-sm text-torko"
               >
                 Project Description
               </label>
               <input
                 type="text"
-                id="pj-desc"
+                id="description"
+                {...register("description")}
                 className="h-12 border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
               />
             </div>
@@ -238,12 +281,11 @@ const NewForm = () => {
                 {itemList.map((item, index) => {
                   return (
                     <ItemList
-                      key={item.id}
+                      key={index + 1}
                       itemData={item}
                       index={index}
-                      id={item.id}
                       setItemList={setItemList}
-                      handleRemove={() => removeItemFields(item.id)}
+                      handleRemove={() => handleRemove(index)}
                     />
                   );
                 })}
@@ -267,6 +309,7 @@ const NewForm = () => {
             </div>
           </div>
         </form>
+        <DevTool control={control} />
       </div>
       <div
         className={` inset-0 top-0 left-0 w-full ${
