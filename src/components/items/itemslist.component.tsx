@@ -1,22 +1,7 @@
 import { useEffect, useState } from "react";
-
-export type ItemTypes = {
-  id: string;
-  item: string;
-  itemQty: number;
-  itemPrice: number;
-  itemTotal: number;
-};
-type ItemTypeProps = {
-  index: number;
-  itemData: ItemTypes;
-  id: string;
-  handleRemove: () => void;
-  setItemList: React.Dispatch<React.SetStateAction<ItemTypes[]>>;
-};
+import { ItemTypeProps } from "../types/types";
 
 const ItemList: React.FC<ItemTypeProps> = ({
-  itemData,
   setItemList,
   index,
   handleRemove,
@@ -24,7 +9,6 @@ const ItemList: React.FC<ItemTypeProps> = ({
   const [qty, setQty] = useState<number>(0);
   const [price, setPrice] = useState<number>(0);
   const defaultValues = {
-    id: itemData.id,
     item: "",
     itemQty: 0,
     itemPrice: 0,
