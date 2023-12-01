@@ -1,63 +1,66 @@
 import { useEffect, useState } from "react";
-import { ItemTypeProps } from "../types/types";
+import { InputProps } from "../types/types";
 
-const ItemList: React.FC<ItemTypeProps> = ({
-  setItemList,
+const ItemList: React.FC<InputProps> = ({
   index,
-  handleRemove,
+  register,
+  remove,
+  getValues,
+  setValue,
+  fields,
 }) => {
-  const [qty, setQty] = useState<number>(0);
-  const [price, setPrice] = useState<number>(0);
-  const defaultValues = {
-    item: "",
-    itemQty: 0,
-    itemPrice: 0,
-    itemTotal: 0,
-  };
-  const [itemValues, setItemValues] = useState(defaultValues);
-  const total = qty * price;
+  useEffect(() => {}, [fields[index].price, fields[index].quantity]);
+  // const [qty, setQty] = useState<number>(0);
+  // const [price, setPrice] = useState<number>(0);
+  // const defaultValues = {
+  //   item: "",
+  //   itemQty: 0,
+  //   itemPrice: 0,
+  //   itemTotal: 0,
+  // };
+  // const total = qty * price;
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value, name } = e.target;
-    setItemValues((prev) => {
-      return {
-        ...prev,
-        [name]: +value,
-      };
-    });
-    if (e.target.id.startsWith("q")) {
-      setQty(+value);
-    } else {
-      setPrice(+value);
-    }
-  };
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { value, name } = e.target;
+  //   setItemValues((prev) => {
+  //     return {
+  //       ...prev,
+  //       [name]: +value,
+  //     };
+  //   });
+  //   if (e.target.id.startsWith("q")) {
+  //     setQty(+value);
+  //   } else {
+  //     setPrice(+value);
+  //   }
+  // };
 
-  useEffect(() => {
-    setItemValues((prev) => {
-      return {
-        ...prev,
-        itemTotal: total,
-      };
-    });
-  }, [total]);
+  // useEffect(() => {
+  //   setItemValues((prev) => {
+  //     return {
+  //       ...prev,
+  //       itemTotal: total,
+  //     };
+  //   });
+  // }, [total]);
 
-  useEffect(() => {
-    setItemList((prev) => {
-      prev[index] = itemValues;
-      return [...prev];
-    });
-  }, [itemValues]);
+  // useEffect(() => {
+  //   setItemList((prev) => {
+  //     prev[index] = itemValues;
+  //     return [...prev];
+  //   });
+  // }, [itemValues]);
 
-  const handleValuesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value, name } = e.target;
+  // const handleValuesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { value, name } = e.target;
 
-    setItemValues((prev) => {
-      return {
-        ...prev,
-        [name]: value,
-      };
-    });
-  };
+  //   setItemValues((prev) => {
+  //     return {
+  //       ...prev,
+  //       [name]: value,
+  //     };
+  //   });
+  // };
 
   return (
     <div className="block md:flex gap-6">
@@ -70,9 +73,8 @@ const ItemList: React.FC<ItemTypeProps> = ({
         </label>
         <input
           type="text"
-          onChange={handleValuesChange}
+          {...register(`items.${index}.name`)}
           id={`item-${index}`}
-          name="item"
           className="h-12 border py-4 px-5  dark:bg-blue-dark dark:hover:border-primary  dark:border-[#252945] cursor-pointer border-gray-light rounded-[4px] text-black-1 dark:text-white font-bold text-sm hover:border-primary "
         />
       </div>
@@ -87,9 +89,10 @@ const ItemList: React.FC<ItemTypeProps> = ({
           <input
             type="number"
             min={0}
-            name="itemQty"
             id={`qty-${index}`}
-            onChange={handleChange}
+            {...register(`items.${index}.quantity`, {
+              valueAsNumber: true,
+            })}
             className="h-12 w-full border  dark:bg-blue-dark dark:hover:border-primary  dark:border-[#252945]  border-gray-light text-black-1 dark:text-white font-bold text-sm  hover:border-primary cursor-pointer text-center"
           />
         </div>
@@ -101,15 +104,13 @@ const ItemList: React.FC<ItemTypeProps> = ({
             Price
           </label>
           <input
-            type="number"
+            type="input"
             id={`price-${index}`}
             min={0}
-            name="itemPrice"
-            value={price.toLocaleString("en-US", {
-              maximumFractionDigits: 2,
-              minimumFractionDigits: 2,
+            step="any" // Set the step to allow one decimal place increments
+            {...register(`items.${index}.price`, {
+              valueAsNumber: true,
             })}
-            onChange={handleChange}
             className="h-12 w-full border  dark:bg-blue-dark dark:hover:border-primary  dark:border-[#252945]  border-gray-light  hover:border-primary cursor-pointer text-black-1 dark:text-white font-bold text-sm text-center"
           />
         </div>
@@ -117,18 +118,18 @@ const ItemList: React.FC<ItemTypeProps> = ({
           <div className="text-torko font-medium text-sm dark:text-gray-light">
             Total
           </div>
-          <div className="mt-4 font-bold text-sm text-dark-gray dark:text-gray-light">
+          {/* <div className="mt-4 font-bold text-sm text-dark-gray dark:text-gray-light">
             {total.toLocaleString("en-US", {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
             })}
-          </div>
+          </div> */}
         </div>
         {/* Bin button to delete sub invoices */}
         <button
+          onClick={() => remove(index)}
           type="button"
           className=" translate-y-full"
-          onClick={handleRemove}
         >
           <svg width="13" height="16" xmlns="http://www.w3.org/2000/svg">
             <path
