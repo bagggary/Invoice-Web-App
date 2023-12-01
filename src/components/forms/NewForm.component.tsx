@@ -3,39 +3,75 @@ import Dropdown from "../dropdown/dropdown.component";
 import Button from "../button/Button.component";
 import { useDispatch, useSelector } from "react-redux";
 import { selectNewform } from "../../store/switch/switch.selector";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { setNewForm } from "../../store/switch/switch.action";
 import backArrow from "../../assets/icon-arrow-left.svg";
 import ItemList from "../items/itemslist.component";
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
-import { FormValues, ItemTypes } from "../types/types";
+import { FormValues } from "../types/types";
 const NewForm = () => {
   const ref = useRef<HTMLDivElement>(null);
   const toggleNewForm = useSelector(selectNewform);
-  const [itemList, setItemList] = useState<ItemTypes[]>([
-    { item: "", itemQty: 0, itemPrice: 0, itemTotal: 0 },
-  ]);
+  // const [itemList, setItemList] = useState<ItemTypes[]>([
+  //   { item: "", itemQty: 0, itemPrice: 0, itemTotal: 0 },
+  // ]);
 
   const form = useForm<FormValues>({
-    defaultValues: {},
+    defaultValues: {
+      id: "",
+      createdAt: "",
+      paymentDue: "",
+      description: "",
+      paymentTerms: 0,
+      clientName: " ",
+      clientEmail: "",
+      status: "",
+      senderAddress: {
+        street: "",
+        city: "",
+        postCode: "",
+        country: "",
+      },
+      clientAddress: {
+        street: "",
+        city: "",
+        postCode: "",
+        country: "",
+      },
+      items: [
+        {
+          name: "",
+          quantity: 0,
+          price: 0,
+          total: 0,
+        },
+      ],
+      total: 0,
+    },
   });
-  const { register, control, handleSubmit } = form;
-  const uniqueID = () => {
-    return (Math.random() * Date.now()).toString();
-  };
+  const { register, control, handleSubmit, getValues, setValue } = form;
 
   const onSubmit = (data: FormValues) => {
     console.log("form Submitted", data);
   };
+  const { fields, append, remove } = useFieldArray({
+    name: "items",
+    control,
+  });
 
-  const removeItemFields = (index: number) => {
-    setItemList((prevItemList) => {
-      const data = [...prevItemList];
-      data.splice(index, 1);
-      return data;
-    });
+  const addField = () => {
+    const itemsField = { name: "", quantity: 0, price: 0, total: 0 };
+    append(itemsField);
   };
+
+  // const removeItemFields = (index: number) => {
+  //   setItemList((prevItemList) => {
+  //     const data = [...prevItemList];
+  //     data.splice(index, 1);
+  //     return data;
+  //   });
+  // };
 
   const dispatch = useDispatch();
 
@@ -53,25 +89,25 @@ const NewForm = () => {
     };
   }, [toggleNewForm]);
 
-  function addItemField() {
-    const newItemList = {
-      id: uniqueID(),
-      item: "",
-      itemQty: 0,
-      itemPrice: 0,
-      itemTotal: 0,
-    };
-    setItemList((prev) => {
-      return [...prev, newItemList];
-    });
-  }
+  // function addItemField() {
+  //   const newItemList = {
+  //     id: uniqueID(),
+  //     item: "",
+  //     itemQty: 0,
+  //     itemPrice: 0,
+  //     itemTotal: 0,
+  //   };
+  //   setItemList((prev) => {
+  //     return [...prev, newItemList];
+  //   });
+  // }
   const backClickChange = (): void => {
     dispatch(setNewForm(false));
   };
 
-  const handleRemove = (index: number) => {
-    removeItemFields(index);
-  };
+  // const handleRemove = (index: number) => {
+  //   removeItemFields(index);
+  // };
 
   return (
     <>
@@ -278,24 +314,26 @@ const NewForm = () => {
             <div className="flex flex-col w-full gap-4 ">
               <h2 className="font-bold text-lg text-[#777F98]">Item List</h2>
               <div className="flex flex-col gap-5">
-                {itemList.map((item, index) => {
+                {fields?.map((filed, index) => {
                   return (
                     <ItemList
-                      key={index + 1}
-                      itemData={item}
+                      key={filed.id}
                       index={index}
-                      setItemList={setItemList}
-                      handleRemove={() => handleRemove(index)}
+                      register={register}
+                      remove={remove}
+                      getValues={getValues}
+                      setValue={setValue}
+                      fields={fields}
                     />
                   );
                 })}
               </div>
               <button
                 type="button"
-                onClick={addItemField}
+                onClick={addField}
                 className="w-full h-12 text-torko hover:bg-gray-light dark:hover:bg-blue-light font-bold text-sm rounded-3xl dark:text-gray-light cursor-pointer "
               >
-                + Add New Item{" "}
+                + Add New Item
               </button>
             </div>
             <div className="w-full flex justify-between items-center">
