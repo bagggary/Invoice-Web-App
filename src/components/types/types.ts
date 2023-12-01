@@ -1,3 +1,6 @@
+import { InputHTMLAttributes } from "react";
+import { UseFormRegister, FieldValues, UseFormSetValue } from "react-hook-form";
+
 export type ItemTypes = {
   item: string;
   itemQty: number;
@@ -36,13 +39,26 @@ export type FormValues = {
   ];
   total: number;
 };
-export type ItemTypeProps = {
-  index: number;
-  itemData: ItemTypes;
-  handleRemove: () => void;
-  setItemList: React.Dispatch<React.SetStateAction<ItemTypes[]>>;
-};
+// export type ItemTypeProps = {
+//   index: number;
+//   register: UseFormRegister<FieldValues>;
+// };
+// export interface InputProps extends Partial<Pick<UseFormReturn, "register">> {
+//   rules?: ValidationRule;
+//   index: number;
+//   register: UseFormRegister<FieldValues>;
 
+//   // type: "text" | "email" | "number";
+// }
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+  index: number;
+  key?: string;
+  register: UseFormRegister<FieldValues> | any;
+  remove: (index?: number | number[]) => void;
+  getValues: (payload?: string | string[]) => Object;
+  setValue: UseFormSetValue<FormValues>;
+  fields: { name: string; quantity: number; price: number; total: number }[];
+}
 //createdAt: string , invoiceId : string
 export function defaultFields() {
   return {
