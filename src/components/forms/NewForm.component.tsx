@@ -50,7 +50,7 @@ const NewForm = () => {
       total: 0,
     },
   });
-  const { register, control, handleSubmit, getValues, setValue } = form;
+  const { register, control, handleSubmit, setValue, watch } = form;
 
   const onSubmit = (data: FormValues) => {
     console.log("form Submitted", data);
@@ -321,7 +321,7 @@ const NewForm = () => {
                       index={index}
                       register={register}
                       remove={remove}
-                      getValues={getValues}
+                      watch={watch}
                       setValue={setValue}
                       fields={fields}
                     />
