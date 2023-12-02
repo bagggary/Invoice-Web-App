@@ -55,8 +55,8 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   key?: string;
   register: UseFormRegister<FieldValues> | any;
   remove: (index?: number | number[]) => void;
-  getValues: (payload?: string | string[]) => Object;
-  setValue: UseFormSetValue<FormValues>;
+  watch: any;
+  setValue: UseFormSetValue<FieldValues> | any;
   fields: { name: string; quantity: number; price: number; total: number }[];
 }
 //createdAt: string , invoiceId : string
