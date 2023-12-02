@@ -1,15 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { InputProps } from "../types/types";
 
 const ItemList: React.FC<InputProps> = ({
   index,
   register,
   remove,
-  getValues,
   setValue,
+  watch,
   fields,
 }) => {
-  useEffect(() => {}, [fields[index].price, fields[index].quantity]);
   // const [qty, setQty] = useState<number>(0);
   // const [price, setPrice] = useState<number>(0);
   // const defaultValues = {
@@ -62,6 +61,32 @@ const ItemList: React.FC<InputProps> = ({
   //   });
   // };
 
+  const quantity = watch(`items.${index}.quantity`);
+  const price = watch(`items.${index}.price`);
+  const total = quantity * price;
+
+  // useEffect(() => {
+  //   let totalInvoice = 0;
+  //   setValue(`items.${index}.total`, total);
+  //   totalInvoice += total;
+  //   setValue("total", totalInvoice);
+  // }, [price, quantity]);
+
+  useEffect(() => {
+    let totalInvoice = 0;
+
+    fields.forEach((_, idx) => {
+      const fieldQuantity = watch(`items.${idx}.quantity`);
+      const fieldPrice = watch(`items.${idx}.price`);
+      const fieldTotal = fieldQuantity * fieldPrice;
+      setValue(`items.${idx}.total`, fieldTotal);
+
+      totalInvoice += fieldTotal;
+    });
+
+    setValue("total", totalInvoice);
+  }, [fields, watch]);
+
   return (
     <div className="block md:flex gap-6">
       <div className="flex flex-col gap-4 w-full ">
@@ -92,6 +117,7 @@ const ItemList: React.FC<InputProps> = ({
             id={`qty-${index}`}
             {...register(`items.${index}.quantity`, {
               valueAsNumber: true,
+              required: true,
             })}
             className="h-12 w-full border  dark:bg-blue-dark dark:hover:border-primary  dark:border-[#252945]  border-gray-light text-black-1 dark:text-white font-bold text-sm  hover:border-primary cursor-pointer text-center"
           />
@@ -104,12 +130,13 @@ const ItemList: React.FC<InputProps> = ({
             Price
           </label>
           <input
-            type="input"
+            type="number"
             id={`price-${index}`}
             min={0}
             step="any" // Set the step to allow one decimal place increments
             {...register(`items.${index}.price`, {
               valueAsNumber: true,
+              required: true,
             })}
             className="h-12 w-full border  dark:bg-blue-dark dark:hover:border-primary  dark:border-[#252945]  border-gray-light  hover:border-primary cursor-pointer text-black-1 dark:text-white font-bold text-sm text-center"
           />
@@ -118,12 +145,12 @@ const ItemList: React.FC<InputProps> = ({
           <div className="text-torko font-medium text-sm dark:text-gray-light">
             Total
           </div>
-          {/* <div className="mt-4 font-bold text-sm text-dark-gray dark:text-gray-light">
+          <div className="mt-4 font-bold text-sm text-dark-gray dark:text-gray-light">
             {total.toLocaleString("en-US", {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
             })}
-          </div> */}
+          </div>
         </div>
         {/* Bin button to delete sub invoices */}
         <button
