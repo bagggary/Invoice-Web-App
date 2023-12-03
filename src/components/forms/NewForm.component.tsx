@@ -7,9 +7,9 @@ import { useEffect, useRef } from "react";
 import { setNewForm } from "../../store/switch/switch.action";
 import backArrow from "../../assets/icon-arrow-left.svg";
 import ItemList from "../items/itemslist.component";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray, FieldArray } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
-import { FormValues } from "../types/types";
+import { FormValues, FieldTypes } from "../types/types";
 const NewForm = () => {
   const ref = useRef<HTMLDivElement>(null);
   const toggleNewForm = useSelector(selectNewform);
@@ -101,6 +101,18 @@ const NewForm = () => {
   //     return [...prev, newItemList];
   //   });
   // }
+
+  useEffect(() => {
+    console.log("Executing main form useEffect");
+    let totalInvoice = 0;
+    fields.forEach((field, index) => {
+      const total = field.price * field.quantity;
+      setValue(`items.${index}.total` as any, total);
+      totalInvoice += total;
+    });
+    setValue("total", totalInvoice);
+  }, [fields, setValue]);
+
   const backClickChange = (): void => {
     dispatch(setNewForm(false));
   };
@@ -146,7 +158,7 @@ const NewForm = () => {
               <input
                 type="text"
                 id="senderStreet"
-                {...register("senderAddress.street")}
+                {...register("senderAddress.street" as const)}
                 className="h-12  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
               />
             </div>
@@ -165,7 +177,7 @@ const NewForm = () => {
                 <input
                   type="text"
                   id="senderCity"
-                  {...register("senderAddress.city")}
+                  {...register("senderAddress.city" as const)}
                   className="h-12  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
                 />
               </div>
@@ -180,7 +192,7 @@ const NewForm = () => {
                 <input
                   type="text"
                   id="senderPostCode"
-                  {...register("senderAddress.postCode")}
+                  {...register("senderAddress.postCode" as const)}
                   className="h-12  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
                 />
               </div>
@@ -195,7 +207,7 @@ const NewForm = () => {
                 <input
                   type="text"
                   id="senderCountry"
-                  {...register("senderAddress.country")}
+                  {...register("senderAddress.country" as const)}
                   className="h-12  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
                 />
               </div>
@@ -214,7 +226,7 @@ const NewForm = () => {
               <input
                 type="text"
                 id="clientName"
-                {...register("clientName")}
+                {...register("clientName" as const)}
                 className="h-12  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
               />
             </div>
@@ -228,7 +240,7 @@ const NewForm = () => {
               <input
                 type="email"
                 id="clientEmail"
-                {...register("clientEmail")}
+                {...register("clientEmail" as const)}
                 className="h-12  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
                 placeholder="e.g. email@example.com"
               />
@@ -243,7 +255,7 @@ const NewForm = () => {
               <input
                 type="text"
                 id="clientStreet"
-                {...register("clientAddress.street")}
+                {...register("clientAddress.street" as const)}
                 className="h-12  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
               />
             </div>
@@ -258,7 +270,7 @@ const NewForm = () => {
                 <input
                   type="text"
                   id="clientCity"
-                  {...register("clientAddress.city")}
+                  {...register("clientAddress.city" as const)}
                   className="h-12  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
                 />
               </div>
@@ -273,7 +285,7 @@ const NewForm = () => {
                 <input
                   type="text"
                   id="clientPostCode"
-                  {...register("clientAddress.postCode")}
+                  {...register("clientAddress.postCode" as const)}
                   className="h-12  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
                 />
               </div>
@@ -294,7 +306,7 @@ const NewForm = () => {
               </div>
             </div>
             <div className="flex flex-col ">
-              <DatePicker />
+              <DatePicker setValue={setValue} />
               <Dropdown />
             </div>
             <div className="flex flex-col gap-[10px]">
