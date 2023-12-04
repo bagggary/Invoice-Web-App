@@ -4,25 +4,37 @@ import { getDaysInMonth, format, getYear } from "date-fns";
 import rightArrow from "../../assets/icon-arrow-right.svg";
 import leftArrow from "../../assets/icon-arrow-left.svg";
 import { ReactComponent as Calender } from "../../assets/icon-calendar.svg";
+import { DateProps } from "../types/types";
 
-export const DatePicker = ({}) => {
+export const DatePicker: React.FC<DateProps> = ({ setValue }) => {
   const ref = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const value = "2021-08-19";
+  const todayDate = () => {
+    const initDate = new Date(Date.now());
+    const year = initDate.getFullYear();
+    const month = initDate.getMonth() + 1;
+    const day = initDate.getDate();
+    return `${year}-${month}-${day}`;
+  };
 
-  // initial values
+  const value = todayDate();
+
   const initialSelectedDate = value ? new Date(value) : new Date(Date.now());
   const initialCurrentMonth = new Date(initialSelectedDate).getMonth();
   const initialCurrentYear = getYear(initialSelectedDate);
   const initialDaysInMonth = getDaysInMonth(initialSelectedDate);
 
-  // hooks
   const [open, openHandlers] = useToggle();
   const [selectedDate, setSelectedDate] = useState(initialSelectedDate);
   const [currentMonth, setCurrentMonth] = useState(initialCurrentMonth);
   const [currentYear, setCurrentYear] = useState(initialCurrentYear);
   const [daysInMonth, setDaysInMonth] = useState(initialDaysInMonth);
+
+  useEffect(() => {
+    const invoiceDate = `${selectedDate.getFullYear()}-${selectedDate.getMonth()}-${selectedDate.getDate()}`;
+    setValue("createdAt", invoiceDate);
+  }, [selectedDate]);
 
   useEffect(() => {
     setSelectedDate(new Date(value));
@@ -38,7 +50,6 @@ export const DatePicker = ({}) => {
     }
   };
 
-  // close datepicker on click outside of the datepicker
   const clickOffEffect = () => {
     if (open) {
       window.addEventListener("click", handleClickOff);
@@ -62,7 +73,6 @@ export const DatePicker = ({}) => {
   useEffect(clickOffEffect, [open]);
   useEffect(setFocus, [open]);
 
-  // handlers
   const handlePrevMonth = () => {
     setCurrentMonth((curr) => {
       if (curr - 1 < 0) {
@@ -103,9 +113,8 @@ export const DatePicker = ({}) => {
         <div className="relative w-[100%] flex">
           <input
             ref={inputRef}
-            // value={format(selectedDate, "dd MMM yyyy")}
             placeholder={format(selectedDate, "dd MMM yyyy")}
-            className="h-[3rem] dark:border-blue-light dark:bg-blue-dark py-4 pl-5 w-full text-sm text-black-1 rounded-md border border-gray-light font-bold cursor-pointer"
+            className="h-[3rem] placeholder:text-black-1 dark:placeholder:text-white dark:border-blue-light dark:bg-blue-dark py-4 pl-5 w-full text-sm text-black-1 rounded-md border border-gray-light font-bold cursor-pointer"
             onFocus={openHandlers.on}
             type="text"
           />
@@ -149,7 +158,6 @@ export const DatePicker = ({}) => {
                   >
                     {p}
                   </p>
-                  // <Calender />
                 )
               )}
           </div>
