@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { InputProps } from "../types/types";
+import { useEffect, useState } from "react";
+import { InputProps, FieldTypes, FormValues } from "../types/types";
 
 const ItemList: React.FC<InputProps> = ({
   index,
@@ -7,85 +7,25 @@ const ItemList: React.FC<InputProps> = ({
   remove,
   setValue,
   watch,
-  fields,
+  total,
 }) => {
-  // const [qty, setQty] = useState<number>(0);
-  // const [price, setPrice] = useState<number>(0);
-  // const defaultValues = {
-  //   item: "",
-  //   itemQty: 0,
-  //   itemPrice: 0,
-  //   itemTotal: 0,
-  // };
-  // const total = qty * price;
-
-  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const { value, name } = e.target;
-  //   setItemValues((prev) => {
-  //     return {
-  //       ...prev,
-  //       [name]: +value,
-  //     };
-  //   });
-  //   if (e.target.id.startsWith("q")) {
-  //     setQty(+value);
-  //   } else {
-  //     setPrice(+value);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   setItemValues((prev) => {
-  //     return {
-  //       ...prev,
-  //       itemTotal: total,
-  //     };
-  //   });
-  // }, [total]);
-
-  // useEffect(() => {
-  //   setItemList((prev) => {
-  //     prev[index] = itemValues;
-  //     return [...prev];
-  //   });
-  // }, [itemValues]);
-
-  // const handleValuesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const { value, name } = e.target;
-
-  //   setItemValues((prev) => {
-  //     return {
-  //       ...prev,
-  //       [name]: value,
-  //     };
-  //   });
-  // };
-
-  const quantity = watch(`items.${index}.quantity`);
-  const price = watch(`items.${index}.price`);
-  const total = quantity * price;
-
-  // useEffect(() => {
-  //   let totalInvoice = 0;
-  //   setValue(`items.${index}.total`, total);
-  //   totalInvoice += total;
-  //   setValue("total", totalInvoice);
-  // }, [price, quantity]);
-
   useEffect(() => {
-    let totalInvoice = 0;
-
-    fields.forEach((_, idx) => {
-      const fieldQuantity = watch(`items.${idx}.quantity`);
-      const fieldPrice = watch(`items.${idx}.price`);
-      const fieldTotal = fieldQuantity * fieldPrice;
-      setValue(`items.${idx}.total`, fieldTotal);
-
-      totalInvoice += fieldTotal;
-    });
-
-    setValue("total", totalInvoice);
-  }, [fields, watch]);
+    setValue(`items.${index}.total`, total);
+    const items = watch("items") || [];
+    const overallTotal = items.reduce(
+      (acc: number, item: FieldTypes) => acc + (item.total || 0),
+      0
+    );
+    setValue("total", overallTotal);
+  }, [total]);
+  // useEffect(() => {
+  //   const items = watch("items") || [];
+  //   const overallTotal = items.reduce(
+  //     (acc: number, item: FieldTypes) => acc + (item.total || 0),
+  //     0
+  //   );
+  //   setValue("total", overallTotal);
+  // }, [total]);
 
   return (
     <div className="block md:flex gap-6">
@@ -98,7 +38,7 @@ const ItemList: React.FC<InputProps> = ({
         </label>
         <input
           type="text"
-          {...register(`items.${index}.name`)}
+          {...register(`items.${index}.name` as const)}
           id={`item-${index}`}
           className="h-12 border py-4 px-5  dark:bg-blue-dark dark:hover:border-primary  dark:border-[#252945] cursor-pointer border-gray-light rounded-[4px] text-black-1 dark:text-white font-bold text-sm hover:border-primary "
         />
@@ -115,7 +55,7 @@ const ItemList: React.FC<InputProps> = ({
             type="number"
             min={0}
             id={`qty-${index}`}
-            {...register(`items.${index}.quantity`, {
+            {...register(`items.${index}.quantity` as const, {
               valueAsNumber: true,
               required: true,
             })}
@@ -134,7 +74,7 @@ const ItemList: React.FC<InputProps> = ({
             id={`price-${index}`}
             min={0}
             step="any" // Set the step to allow one decimal place increments
-            {...register(`items.${index}.price`, {
+            {...register(`items.${index}.price` as const, {
               valueAsNumber: true,
               required: true,
             })}
@@ -142,13 +82,13 @@ const ItemList: React.FC<InputProps> = ({
           />
         </div>
         <div className="flex flex-col self-start md:gap-4 gap-[10px] content-center pr-0">
-          <div className="text-torko font-medium text-sm dark:text-gray-light">
+          <label className="text-torko font-medium text-sm dark:text-gray-light">
             Total
-          </div>
+          </label>
           <div className="mt-4 font-bold text-sm text-dark-gray dark:text-gray-light">
-            {total.toLocaleString("en-US", {
-              minimumFractionDigits: 2,
+            {total?.toLocaleString("en-US", {
               maximumFractionDigits: 2,
+              minimumFractionDigits: 2,
             })}
           </div>
         </div>
