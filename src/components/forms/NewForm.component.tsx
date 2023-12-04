@@ -7,15 +7,13 @@ import { useEffect, useRef } from "react";
 import { setNewForm } from "../../store/switch/switch.action";
 import backArrow from "../../assets/icon-arrow-left.svg";
 import ItemList from "../items/itemslist.component";
-import { useForm, useFieldArray, FieldArray } from "react-hook-form";
+import { useForm, useFieldArray, FieldArray, useWatch } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { FormValues, FieldTypes } from "../types/types";
+import Items from "../items/items.component";
 const NewForm = () => {
   const ref = useRef<HTMLDivElement>(null);
   const toggleNewForm = useSelector(selectNewform);
-  // const [itemList, setItemList] = useState<ItemTypes[]>([
-  //   { item: "", itemQty: 0, itemPrice: 0, itemTotal: 0 },
-  // ]);
 
   const form = useForm<FormValues>({
     defaultValues: {
@@ -50,7 +48,7 @@ const NewForm = () => {
       total: 0,
     },
   });
-  const { register, control, handleSubmit, setValue, watch } = form;
+  const { register, control, handleSubmit, setValue, watch, getValues } = form;
 
   const onSubmit = (data: FormValues) => {
     console.log("form Submitted", data);
@@ -60,18 +58,18 @@ const NewForm = () => {
     control,
   });
 
+  const watchTest = useWatch({
+    control,
+    name: "items",
+    defaultValue: fields as any,
+  });
+
+  // Clean up the subscription when the component unmounts
+
   const addField = () => {
     const itemsField = { name: "", quantity: 0, price: 0, total: 0 };
     append(itemsField);
   };
-
-  // const removeItemFields = (index: number) => {
-  //   setItemList((prevItemList) => {
-  //     const data = [...prevItemList];
-  //     data.splice(index, 1);
-  //     return data;
-  //   });
-  // };
 
   const dispatch = useDispatch();
 
@@ -89,37 +87,9 @@ const NewForm = () => {
     };
   }, [toggleNewForm]);
 
-  // function addItemField() {
-  //   const newItemList = {
-  //     id: uniqueID(),
-  //     item: "",
-  //     itemQty: 0,
-  //     itemPrice: 0,
-  //     itemTotal: 0,
-  //   };
-  //   setItemList((prev) => {
-  //     return [...prev, newItemList];
-  //   });
-  // }
-
-  useEffect(() => {
-    console.log("Executing main form useEffect");
-    let totalInvoice = 0;
-    fields.forEach((field, index) => {
-      const total = field.price * field.quantity;
-      setValue(`items.${index}.total` as any, total);
-      totalInvoice += total;
-    });
-    setValue("total", totalInvoice);
-  }, [fields, setValue]);
-
   const backClickChange = (): void => {
     dispatch(setNewForm(false));
   };
-
-  // const handleRemove = (index: number) => {
-  //   removeItemFields(index);
-  // };
 
   return (
     <>
@@ -326,16 +296,19 @@ const NewForm = () => {
             <div className="flex flex-col w-full gap-4 ">
               <h2 className="font-bold text-lg text-[#777F98]">Item List</h2>
               <div className="flex flex-col gap-5">
-                {fields?.map((filed, index) => {
+                {fields?.map((field, index) => {
+                  const watchItem = watchTest[index] || {};
+                  const totalAmount = watchItem.quantity * watchItem.price || 0;
+                  field.total = totalAmount;
                   return (
                     <ItemList
-                      key={filed.id}
+                      key={field.id}
                       index={index}
                       register={register}
                       remove={remove}
                       watch={watch}
                       setValue={setValue}
-                      fields={fields}
+                      total={totalAmount}
                     />
                   );
                 })}
