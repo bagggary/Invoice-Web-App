@@ -50,6 +50,12 @@ export type FormValues = {
 
 //   // type: "text" | "email" | "number";
 // }
+export type FieldTypes = {
+  name: string;
+  price: number;
+  quantity: number;
+  total: number;
+};
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   index: number;
   key?: string;
@@ -57,7 +63,12 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   remove: (index?: number | number[]) => void;
   watch: any;
   setValue: UseFormSetValue<FieldValues> | any;
-  fields: { name: string; quantity: number; price: number; total: number }[];
+  fields?: FieldTypes[];
+  total?: number;
+}
+
+export interface DateProps extends InputHTMLAttributes<HTMLInputElement> {
+  setValue: UseFormSetValue<FieldValues> | any;
 }
 //createdAt: string , invoiceId : string
 export function defaultFields() {
