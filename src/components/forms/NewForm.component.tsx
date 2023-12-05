@@ -277,7 +277,7 @@ const NewForm = () => {
             </div>
             <div className="flex flex-col ">
               <DatePicker setValue={setValue} />
-              <Dropdown />
+              <Dropdown setValue={setValue} watch={watch} />
             </div>
             <div className="flex flex-col gap-[10px]">
               <label
