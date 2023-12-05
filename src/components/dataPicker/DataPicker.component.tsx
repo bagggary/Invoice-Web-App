@@ -32,7 +32,11 @@ export const DatePicker: React.FC<DateProps> = ({ setValue }) => {
   const [daysInMonth, setDaysInMonth] = useState(initialDaysInMonth);
 
   useEffect(() => {
-    const invoiceDate = `${selectedDate.getFullYear()}-${selectedDate.getMonth()}-${selectedDate.getDate()}`;
+    const invoiceDate = `${selectedDate.getFullYear()}-${(
+      selectedDate.getMonth() + 1
+    )
+      .toString()
+      .padStart(2, "0")}-${selectedDate.getDate().toString().padStart(2, "0")}`;
     setValue("createdAt", invoiceDate);
   }, [selectedDate]);
 
