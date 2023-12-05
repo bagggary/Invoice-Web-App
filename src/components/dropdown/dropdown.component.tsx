@@ -1,8 +1,9 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { ReactComponent as ArrowDown } from "../../assets/icon-arrow-down.svg";
 import { useToggle } from "../../util/hooks/useToggle.hooks";
+import { PaymentTypes } from "../types/types";
 
-const Dropdown = () => {
+const Dropdown: React.FC<PaymentTypes> = ({ watch, setValue }) => {
   const [show, showDrop] = useToggle();
 
   const options = useMemo(
@@ -16,12 +17,38 @@ const Dropdown = () => {
   );
 
   const [terms, setTerms] = useState(options[0].label);
+  const [value, setValueDue] = useState(0);
   const dropDownHandler = useCallback(() => {
     showDrop.toggle();
   }, [showDrop]);
-  const termsHandlers = useCallback((e): void => {
-    setTerms(e.target.textContent);
-  }, []);
+  const invoiceDate = watch("createdAt");
+  // interface Date {
+  //   addDays(days: number): () => number;
+  // }
+  const setPaymentDue = (paymentTerm) => {
+    const dueDate = new Date(invoiceDate);
+    dueDate.setDate(dueDate.getDate() + paymentTerm);
+    const finalDate =
+      dueDate.getFullYear() +
+      "-" +
+      (dueDate.getMonth() + 1).toString().padStart(2, "0") +
+      "-" +
+      dueDate.getDate().toString().padStart(2, "0");
+
+    return finalDate;
+  };
+
+  const termsHandlers = useCallback(
+    (selectedValue: number, selectedLabel: string): void => {
+      setTerms(selectedLabel);
+      setValueDue(selectedValue);
+      setValue("paymentTerms", selectedValue);
+    },
+    []
+  );
+  useEffect(() => {
+    setValue("paymentDue", setPaymentDue(value));
+  }, [value]);
   return (
     <div className="flex gap-[10px] flex-col ">
       <label htmlFor="dropdown" className="text-torko font-medium text-sm ">
@@ -50,7 +77,8 @@ const Dropdown = () => {
           {options?.map((term) => {
             return (
               <div
-                onClick={termsHandlers}
+                key={term.value}
+                onClick={() => termsHandlers(term.value, term.label)}
                 className=" cursor-pointer dark:gray-light dark:text-gray-light dark:hover:text-primary dark:border-blue-dark hover:text-primary text-sm font-bold text-black-1 border-b border-gray-light px-6 py-3 last:border-0"
               >
                 {term.label}
