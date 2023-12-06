@@ -7,10 +7,9 @@ import { useEffect, useRef } from "react";
 import { setNewForm } from "../../store/switch/switch.action";
 import backArrow from "../../assets/icon-arrow-left.svg";
 import ItemList from "../items/itemslist.component";
-import { useForm, useFieldArray, FieldArray, useWatch } from "react-hook-form";
+import { useForm, useFieldArray, useWatch } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
-import { FormValues, FieldTypes } from "../types/types";
-import Items from "../items/items.component";
+import { FormValues } from "../types/types";
 const NewForm = () => {
   const ref = useRef<HTMLDivElement>(null);
   const toggleNewForm = useSelector(selectNewform);
@@ -21,8 +20,8 @@ const NewForm = () => {
       createdAt: "",
       paymentDue: "",
       description: "",
-      paymentTerms: 0,
-      clientName: " ",
+      paymentTerms: 1,
+      clientName: "",
       clientEmail: "",
       status: "",
       senderAddress: {
@@ -48,7 +47,34 @@ const NewForm = () => {
       total: 0,
     },
   });
-  const { register, control, handleSubmit, setValue, watch, getValues } = form;
+  const { register, control, handleSubmit, setValue, watch, formState } = form;
+  const { errors } = formState;
+
+  console.log(errors);
+
+  const generateId = () => {
+    const letters = "ABCDEFGHIJKLMNOPQRSTUWVXYZ";
+    const numbers = "123456789";
+    let id = "";
+
+    for (let i = 0; i < 2; i++) {
+      const twoLetters = letters.charAt(
+        Math.floor(Math.random() * letters.length)
+      );
+      id += twoLetters;
+    }
+    for (let k = 0; k < 4; k++) {
+      const fourNumbers = numbers.charAt(
+        Math.floor(Math.random() * numbers.length)
+      );
+      id += fourNumbers;
+    }
+    return id;
+  };
+
+  useEffect(() => {
+    setValue("id", generateId());
+  }, []);
 
   const onSubmit = (data: FormValues) => {
     console.log("form Submitted", data);
@@ -114,165 +140,281 @@ const NewForm = () => {
         <form
           className="mt-12 flex flex-col gap-12"
           onSubmit={handleSubmit(onSubmit)}
+          noValidate
         >
           {/* bill from container */}
           <div className="flex flex-col gap-6">
             <h2 className="font-bold text-sm text-primary ">Bill From</h2>
-            <div className="flex w-full flex-col gap-[10px]">
+            <div className="flex w-full flex-col gap-[10px] relative">
               <label
                 htmlFor="senderStreet"
-                className="font-medium text-sm text-torko dark:text-gray-light"
+                className={`font-medium ${
+                  errors.senderAddress?.street?.message ? `text-red` : ``
+                } text-sm text-torko dark:text-gray-light`}
               >
                 Street Address
               </label>
               <input
                 type="text"
                 id="senderStreet"
-                {...register("senderAddress.street" as const)}
-                className="h-12  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
+                {...register("senderAddress.street" as const, {
+                  required: "can't be empty",
+                })}
+                className={`h-12 ${
+                  errors.senderAddress?.street?.message
+                    ? ` border-red hover:border-red`
+                    : ``
+                }   border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white  py-4 px-5`}
               />
+              <p className=" absolute top-0 text-red right-0 text-[10px] font-semibold">
+                {errors?.senderAddress?.street?.message}
+              </p>
             </div>
             {/*  */}
             {/*  */}
             {/*  */}
 
             <div className="flex gap-6 sm:max-w-[calc(100%-48px)]  sm:flex-nowrap flex-wrap ">
-              <div className=" w-1/3 flex flex-grow flex-col gap-[10px]">
+              <div className=" w-1/3 flex flex-grow flex-col gap-[10px] relative">
                 <label
                   htmlFor="senderCity"
-                  className=" flex-grow flex-shrink font-medium  text-sm text-torko"
+                  className={`flex-grow ${
+                    errors.senderAddress?.city?.message ? `text-red` : ``
+                  } flex-shrink font-medium  text-sm text-torko`}
                 >
                   City
                 </label>
                 <input
                   type="text"
                   id="senderCity"
-                  {...register("senderAddress.city" as const)}
-                  className="h-12  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
+                  {...register("senderAddress.city" as const, {
+                    required: "can't be empty",
+                  })}
+                  className={`h-12  border ${
+                    errors.senderAddress?.city?.message
+                      ? `border-red hover:border-red`
+                      : ``
+                  } hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5`}
                 />
+                <p className=" absolute top-0 text-red right-0 text-[10px] font-semibold">
+                  {errors?.clientAddress?.city?.message}
+                </p>
               </div>
 
-              <div className="  w-1/3 flex-grow flex flex-col gap-[10px]">
+              <div className="  w-1/3 flex-grow flex flex-col gap-[10px] relative">
                 <label
                   htmlFor="senderPostCode"
-                  className="font-medium text-sm text-torko"
+                  className={`font-medium ${
+                    errors.clientAddress?.postCode?.message ? `text-red ` : ``
+                  } text-sm text-torko`}
                 >
                   Post Code
                 </label>
                 <input
                   type="text"
                   id="senderPostCode"
-                  {...register("senderAddress.postCode" as const)}
-                  className="h-12  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
+                  {...register("senderAddress.postCode" as const, {
+                    required: "can't be empty",
+                  })}
+                  className={` h-12 ${
+                    errors.senderAddress?.postCode?.message
+                      ? `border-red hover:border-red`
+                      : ``
+                  }  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5`}
                 />
+                <p className=" absolute top-0 text-red right-0 text-[10px] font-semibold">
+                  {errors?.senderAddress?.postCode?.message}
+                </p>
               </div>
 
-              <div className="  w-1/3 flex-grow flex flex-col gap-[10px]">
+              <div className="  w-1/3 flex-grow flex flex-col gap-[10px] relative">
                 <label
                   htmlFor="senderCountry"
-                  className="font-medium text-sm text-torko"
+                  className={`font-medium ${
+                    errors.clientAddress?.country?.message ? `text-red` : ``
+                  } text-sm text-torko`}
                 >
                   Country
                 </label>
                 <input
                   type="text"
                   id="senderCountry"
-                  {...register("senderAddress.country" as const)}
-                  className="h-12  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
+                  {...register("senderAddress.country" as const, {
+                    required: "can't be empty",
+                  })}
+                  className={`h-12 ${
+                    errors.clientAddress?.country?.message
+                      ? `border-red hover:border-red `
+                      : ``
+                  }  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5`}
                 />
+                <p className=" absolute top-0 text-red right-0 text-[10px] font-semibold">
+                  {errors?.clientAddress?.country?.message}
+                </p>
               </div>
             </div>
           </div>
           {/* bill to container */}
           <div className="flex flex-col gap-6">
             <h2 className="font-bold text-sm text-primary">Bill To</h2>
-            <div className="flex flex-col gap-[10px]">
+            <div className="flex flex-col gap-[10px] relative">
               <label
                 htmlFor="clientName"
-                className="font-medium text-sm text-torko"
+                className={`font-medium text-sm text-torko ${
+                  errors.clientName?.message ? `text-red` : ``
+                }`}
               >
                 Client's Name
               </label>
               <input
                 type="text"
                 id="clientName"
-                {...register("clientName" as const)}
-                className="h-12  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
+                {...register("clientName" as const, {
+                  required: "can't be empty",
+                })}
+                className={`h-12  border ${
+                  errors.clientName?.message
+                    ? `border-red hover:border-red`
+                    : ``
+                } hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5`}
               />
+              <p className=" absolute top-0 text-red right-0 text-[10px] font-semibold">
+                {errors?.clientName?.message}
+              </p>
             </div>
-            <div className="flex flex-col gap-[10px]">
+            <div className="flex flex-col gap-[10px] relative">
               <label
                 htmlFor="clientEmail"
-                className="font-medium text-sm text-torko"
+                className={`font-medium text-sm text-torko ${
+                  errors.clientEmail?.message ? `text-red` : ``
+                }`}
               >
                 Client's Email
               </label>
               <input
                 type="email"
                 id="clientEmail"
-                {...register("clientEmail" as const)}
-                className="h-12  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
+                {...register("clientEmail" as const, {
+                  required: "can't be empty",
+                  pattern: {
+                    value:
+                      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                    message: "Invalid email format",
+                  },
+                })}
+                className={`h-12  border ${
+                  errors.clientEmail?.message
+                    ? `border-red : hover:border-red`
+                    : ``
+                } hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5`}
                 placeholder="e.g. email@example.com"
               />
+              <p className=" absolute top-0 text-red right-0 text-[10px] font-semibold">
+                {errors?.clientEmail?.message}
+              </p>
             </div>
-            <div className="flex w-full flex-col gap-[10px]">
+            <div className="flex w-full flex-col gap-[10px] relative">
               <label
                 htmlFor="clientStreet"
-                className="font-medium text-sm text-torko dark:text-gray-light"
+                className={`${
+                  errors.clientAddress?.street?.message ? `text-red` : ``
+                } font-medium text-sm text-torko dark:text-gray-light`}
               >
                 Street Address
               </label>
               <input
                 type="text"
                 id="clientStreet"
-                {...register("clientAddress.street" as const)}
-                className="h-12  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
+                {...register("clientAddress.street" as const, {
+                  required: "can't be empty",
+                })}
+                className={`h-12 ${
+                  errors.clientAddress?.street?.message
+                    ? `border-red hover:border-red`
+                    : ``
+                }  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5`}
               />
+              <p className=" absolute top-0 text-red right-0 text-[10px] font-semibold">
+                {errors?.clientAddress?.street?.message}
+              </p>
             </div>
-            <div className="flex gap-6 sm:max-w-[calc(100%-48px)]  sm:flex-nowrap flex-wrap ">
-              <div className=" w-1/3 flex-grow flex flex-col gap-[10px]">
+            <div className="flex gap-6 sm:max-w-[calc(100%-48px)]  sm:flex-nowrap flex-wrap  ">
+              <div className=" w-1/3 flex-grow flex flex-col gap-[10px] relative">
                 <label
                   htmlFor="clientCity"
-                  className="font-medium  text-sm text-torko"
+                  className={`font-medium  text-sm text-torko ${
+                    errors.clientAddress?.city?.message ? `text-red` : ``
+                  }`}
                 >
                   City
                 </label>
                 <input
                   type="text"
                   id="clientCity"
-                  {...register("clientAddress.city" as const)}
-                  className="h-12  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
+                  {...register("clientAddress.city" as const, {
+                    required: "can't be empty",
+                  })}
+                  className={`h-12 ${
+                    errors.clientAddress?.city?.message
+                      ? `border-red hover:border-red`
+                      : ``
+                  }  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5`}
                 />
+                <p className=" absolute top-0 text-red right-0 text-[10px] font-semibold">
+                  {errors?.clientAddress?.city?.message}
+                </p>
               </div>
 
-              <div className=" w-1/3 flex-grow  flex flex-col gap-[10px]">
+              <div className=" w-1/3 flex-grow  flex flex-col gap-[10px] relative">
                 <label
                   htmlFor="clientPostCode"
-                  className="font-medium text-sm text-torko"
+                  className={`font-medium ${
+                    errors.clientAddress?.postCode?.message ? `text-red` : ``
+                  } text-sm text-torko`}
                 >
                   Post Code
                 </label>
                 <input
                   type="text"
                   id="clientPostCode"
-                  {...register("clientAddress.postCode" as const)}
-                  className="h-12  border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
+                  {...register("clientAddress.postCode" as const, {
+                    required: "can't be empty",
+                  })}
+                  className={`h-12  border ${
+                    errors.clientAddress?.postCode?.message
+                      ? `border-red hover:border-red`
+                      : ``
+                  } hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5`}
                 />
+                <p className=" absolute top-0 text-red right-0 text-[10px] font-semibold">
+                  {errors?.clientAddress?.postCode?.message}
+                </p>
               </div>
 
-              <div className=" w-1/3 flex flex-grow flex-col gap-[10px]">
+              <div className=" w-1/3 flex flex-grow flex-col gap-[10px] relative">
                 <label
                   htmlFor="clientCountry"
-                  className="font-medium text-sm text-torko"
+                  className={`font-medium ${
+                    errors.clientAddress?.country?.message ? `text-red` : ``
+                  } text-sm text-torko`}
                 >
                   Country
                 </label>
                 <input
                   type="text"
                   id="clientCountry"
-                  {...register("clientAddress.country")}
-                  className="h-12 border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
+                  {...register("clientAddress.country" as const, {
+                    required: "can't be empty",
+                  })}
+                  className={`h-12  border ${
+                    errors.clientAddress?.country?.message
+                      ? `border-red hover:border-red`
+                      : ``
+                  } hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5`}
                 />
+                <p className=" absolute top-0 text-red right-0 text-[10px] font-semibold">
+                  {errors?.clientAddress?.country?.message}
+                </p>
               </div>
             </div>
             <div className="flex flex-col ">
@@ -289,7 +431,9 @@ const NewForm = () => {
               <input
                 type="text"
                 id="description"
-                {...register("description")}
+                {...register("description", {
+                  required: "can't be empty",
+                })}
                 className="h-12 border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
               />
             </div>
