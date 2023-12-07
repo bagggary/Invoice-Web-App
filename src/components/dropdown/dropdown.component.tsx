@@ -17,15 +17,12 @@ const Dropdown: React.FC<PaymentTypes> = ({ watch, setValue }) => {
   );
 
   const [terms, setTerms] = useState(options[0].label);
-  const [value, setValueDue] = useState(0);
+  const [value, setValueDue] = useState(1);
   const dropDownHandler = useCallback(() => {
     showDrop.toggle();
   }, [showDrop]);
-  const invoiceDate = watch("createdAt");
-  // interface Date {
-  //   addDays(days: number): () => number;
-  // }
   const setPaymentDue = (paymentTerm) => {
+    const invoiceDate = watch("createdAt");
     const dueDate = new Date(invoiceDate);
     dueDate.setDate(dueDate.getDate() + paymentTerm);
     const finalDate =
@@ -34,7 +31,6 @@ const Dropdown: React.FC<PaymentTypes> = ({ watch, setValue }) => {
       (dueDate.getMonth() + 1).toString().padStart(2, "0") +
       "-" +
       dueDate.getDate().toString().padStart(2, "0");
-
     return finalDate;
   };
 
@@ -46,6 +42,7 @@ const Dropdown: React.FC<PaymentTypes> = ({ watch, setValue }) => {
     },
     []
   );
+
   useEffect(() => {
     setValue("paymentDue", setPaymentDue(value));
   }, [value]);
@@ -72,7 +69,7 @@ const Dropdown: React.FC<PaymentTypes> = ({ watch, setValue }) => {
             show
               ? "opacity-100 translate-y-4 visible"
               : "opacity-0 translate-y-0 hidden"
-          } opacity-0  top-[2.5rem] left-0 bg-white shadow-3xl dark:bg-blue-light  bg-red-white w-full rounded-lg transition-all duration-300 ease-linear`}
+          } opacity-0  top-[2.5rem] left-0 z-50 bg-white shadow-3xl dark:bg-blue-light  bg-red-white w-full rounded-lg transition-all duration-300 ease-linear`}
         >
           {options?.map((term) => {
             return (
