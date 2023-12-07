@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { InputProps, FieldTypes, FormValues } from "../types/types";
+import { useEffect } from "react";
+import { InputProps, FieldTypes } from "../types/types";
 
 const ItemList: React.FC<InputProps> = ({
   index,
@@ -8,6 +8,8 @@ const ItemList: React.FC<InputProps> = ({
   setValue,
   watch,
   total,
+  errors,
+  fields,
 }) => {
   useEffect(() => {
     setValue(`items.${index}.total`, total);
@@ -18,18 +20,10 @@ const ItemList: React.FC<InputProps> = ({
     );
     setValue("total", overallTotal);
   }, [total]);
-  // useEffect(() => {
-  //   const items = watch("items") || [];
-  //   const overallTotal = items.reduce(
-  //     (acc: number, item: FieldTypes) => acc + (item.total || 0),
-  //     0
-  //   );
-  //   setValue("total", overallTotal);
-  // }, [total]);
 
   return (
     <div className="block md:flex gap-6">
-      <div className="flex flex-col gap-4 w-full ">
+      <div className="flex flex-col gap-4 w-full relative ">
         <label
           htmlFor={`item-${index}`}
           className="text-torko font-medium text-sm dark:text-gray-light"
@@ -38,9 +32,15 @@ const ItemList: React.FC<InputProps> = ({
         </label>
         <input
           type="text"
-          {...register(`items.${index}.name` as const)}
+          {...register(`items.${index}.name` as const, {
+            required: "item can't be empty",
+          })}
           id={`item-${index}`}
-          className="h-12 border py-4 px-5  dark:bg-blue-dark dark:hover:border-primary  dark:border-[#252945] cursor-pointer border-gray-light rounded-[4px] text-black-1 dark:text-white font-bold text-sm hover:border-primary "
+          className={`h-12 border py-4 ${
+            errors.items?.[index]?.name?.message
+              ? `border-red  hover:border-red`
+              : ``
+          }  px-5  dark:bg-blue-dark dark:hover:border-primary  dark:border-[#252945] cursor-pointer border-gray-light rounded-[4px] text-black-1 dark:text-white font-bold text-sm hover:border-primary `}
         />
       </div>
       <div className="md:mt-0 mt-6 grid grid-cols-[25%_25%_0.9fr_0.9fr] place-items-center justify-items-center gap-x-4 md:gap-y-0 gap-y-[18px] ">
@@ -73,7 +73,6 @@ const ItemList: React.FC<InputProps> = ({
             type="number"
             id={`price-${index}`}
             min={0}
-            step="any" // Set the step to allow one decimal place increments
             {...register(`items.${index}.price` as const, {
               valueAsNumber: true,
               required: true,
@@ -92,21 +91,22 @@ const ItemList: React.FC<InputProps> = ({
             })}
           </div>
         </div>
-        {/* Bin button to delete sub invoices */}
-        <button
-          onClick={() => remove(index)}
-          type="button"
-          className=" translate-y-full"
-        >
-          <svg width="13" height="16" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M11.583 3.556v10.666c0 .982-.795 1.778-1.777 1.778H2.694a1.777 1.777 0 01-1.777-1.778V3.556h10.666zM8.473 0l.888.889h3.111v1.778H.028V.889h3.11L4.029 0h4.444z"
-              fill="#888EB0"
-              fill-rule="nonzero"
-              className=" hover:fill-red"
-            />
-          </svg>
-        </button>
+        {fields && fields?.length > 1 && (
+          <button
+            onClick={() => remove(index)}
+            type="button"
+            className="translate-y-full"
+          >
+            <svg width="13" height="16" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M11.583 3.556v10.666c0 .982-.795 1.778-1.777 1.778H2.694a1.777 1.777 0 01-1.777-1.778V3.556h10.666zM8.473 0l.888.889h3.111v1.778H.028V.889h3.11L4.029 0h4.444z"
+                fill="#888EB0"
+                fill-rule="nonzero"
+                className="hover:fill-red"
+              />
+            </svg>
+          </button>
+        )}
       </div>
     </div>
   );
