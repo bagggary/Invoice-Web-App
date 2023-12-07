@@ -1,10 +1,5 @@
 import { InputHTMLAttributes } from "react";
-import {
-  UseFormRegister,
-  FieldValues,
-  UseFormSetValue,
-  FieldValue,
-} from "react-hook-form";
+import { UseFormRegister, FieldValues, UseFormSetValue } from "react-hook-form";
 
 export type ItemTypes = {
   item: string;
@@ -70,6 +65,7 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   setValue: UseFormSetValue<FieldValues> | any;
   fields?: FieldTypes[];
   total?: number;
+  errors: any;
 }
 
 export type PaymentTypes = {
