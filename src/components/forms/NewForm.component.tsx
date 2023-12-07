@@ -47,16 +47,18 @@ const NewForm = () => {
       total: 0,
     },
   });
-  const { register, control, handleSubmit, setValue, watch, formState } = form;
-  const { errors } = formState;
 
-  console.log(errors);
+  const { register, control, handleSubmit, setValue, watch, formState } = form;
+
+  const { errors } = formState;
+  function isObjEmpty(obj) {
+    return Object.keys(obj).length === 0;
+  }
 
   const generateId = () => {
     const letters = "ABCDEFGHIJKLMNOPQRSTUWVXYZ";
     const numbers = "123456789";
     let id = "";
-
     for (let i = 0; i < 2; i++) {
       const twoLetters = letters.charAt(
         Math.floor(Math.random() * letters.length)
@@ -149,7 +151,7 @@ const NewForm = () => {
               <label
                 htmlFor="senderStreet"
                 className={`font-medium ${
-                  errors.senderAddress?.street?.message ? `text-red` : ``
+                  errors.senderAddress?.street?.message ?? `text-red`
                 } text-sm text-torko dark:text-gray-light`}
               >
                 Street Address
@@ -421,7 +423,7 @@ const NewForm = () => {
               <DatePicker setValue={setValue} />
               <Dropdown setValue={setValue} watch={watch} />
             </div>
-            <div className="flex flex-col gap-[10px]">
+            <div className="flex flex-col gap-[10px relative">
               <label
                 htmlFor="description"
                 className="font-medium text-sm text-torko"
@@ -434,8 +436,15 @@ const NewForm = () => {
                 {...register("description", {
                   required: "can't be empty",
                 })}
-                className="h-12 border hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5"
+                className={`h-12 border ${
+                  errors.description?.message
+                    ? `border-red hover:border-red`
+                    : ``
+                } hover:border-primary cursor-pointer  dark:bg-blue-dark dark:hover:border-primary rounded-[4px] dark:border-[#252945] text-black-1 font-bold text-sm dark:text-white border-gray-light  py-4 px-5`}
               />
+              <p className=" absolute top-0 text-red right-0 text-[10px] font-semibold">
+                {errors.description?.message}
+              </p>
             </div>
             <div className="flex flex-col w-full gap-4 ">
               <h2 className="font-bold text-lg text-[#777F98]">Item List</h2>
@@ -453,6 +462,8 @@ const NewForm = () => {
                       watch={watch}
                       setValue={setValue}
                       total={totalAmount}
+                      errors={errors}
+                      fields={fields}
                     />
                   );
                 })}
@@ -465,6 +476,12 @@ const NewForm = () => {
                 + Add New Item
               </button>
             </div>
+            {!isObjEmpty(errors) && (
+              <p className=" text-[12px] text-red font-semibold ">
+                - All fields must be added
+              </p>
+            )}
+            {/* */}
             <div className="w-full flex justify-between items-center">
               <div>
                 <Button type="secondry" text="Discard" />
