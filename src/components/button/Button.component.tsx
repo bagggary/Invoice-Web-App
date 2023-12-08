@@ -1,4 +1,14 @@
-const Button = ({ text, type }: { text: string; type: string }) => {
+const Button = ({
+  text,
+  type,
+  handleStatus,
+  status,
+}: {
+  text: string;
+  type: string;
+  handleStatus?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  status?: string;
+}) => {
   const ButtonStyle = {
     primary: " bg-primary hover:bg-secondry text-white",
     danger: "bg-[#EC5757] hover:bg-red-light text-white",
@@ -10,6 +20,8 @@ const Button = ({ text, type }: { text: string; type: string }) => {
   return (
     <button
       className={` px-6 py-4 ${ButtonStyle[type]} rounded-3xl font-bold text-sm outline-none`}
+      onClick={handleStatus}
+      data-status={status}
     >
       {text}
     </button>
