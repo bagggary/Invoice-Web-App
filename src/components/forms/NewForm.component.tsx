@@ -55,6 +55,10 @@ const NewForm = () => {
     return Object.keys(obj).length === 0;
   }
 
+  const handleStatus = (e) => {
+    setValue("status", e.target.getAttribute("data-status"));
+  };
+
   const generateId = () => {
     const letters = "ABCDEFGHIJKLMNOPQRSTUWVXYZ";
     const numbers = "123456789";
@@ -92,8 +96,6 @@ const NewForm = () => {
     defaultValue: fields as any,
   });
 
-  // Clean up the subscription when the component unmounts
-
   const addField = () => {
     const itemsField = { name: "", quantity: 0, price: 0, total: 0 };
     append(itemsField);
@@ -129,7 +131,7 @@ const NewForm = () => {
       >
         <div
           onClick={backClickChange}
-          className=" md:hidden  flex gap-6 items-center cursor-pointer"
+          className=" md:hidden flex gap-6 items-center cursor-pointer"
         >
           <img src={backArrow} alt="back arrow" />
           <p className="font-bold text-sm hover:text-torko dark:text-white">
@@ -487,8 +489,18 @@ const NewForm = () => {
                 <Button type="secondry" text="Discard" />
               </div>
               <div className="flex gap-2">
-                <Button type="draft" text="Save as Draft" />
-                <Button type="primary" text="Save & Send" />
+                <Button
+                  handleStatus={(e) => handleStatus(e)}
+                  type="draft"
+                  text="Save as Draft"
+                  status="draft"
+                />
+                <Button
+                  handleStatus={(e) => handleStatus(e)}
+                  type="primary"
+                  text="Save & Send"
+                  status="pending"
+                />
               </div>
             </div>
           </div>
