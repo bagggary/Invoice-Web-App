@@ -7,11 +7,13 @@ import {
   onAuthStateChanged,
   signOut,
 } from "firebase/auth";
-import { getDatabase, onValue, ref, set } from "firebase/database";
+import { get, getDatabase, onValue, ref, set } from "firebase/database";
 import Data from "../assets/Data.json";
 // import { useSelector } from "react-redux";
 // import { selectCurrentUser } from "../store/user/user.selector";
 import { store } from "../store/store";
+import { useDispatch } from "react-redux";
+import { fetchInvoicesSuccess } from "../store/invoice/invoice.action";
 
 const firebaseConfig = {
   apiKey: import.meta.env.REACT_APP_API_KEY,
@@ -31,14 +33,33 @@ export const createDocumentFromUserAuth = async (user: any) => {
   if (!user) return;
   const { uid } = user;
   const userDocRef = ref(db, `user/${uid}`);
+  const existingData = await getInvoicesAndDocument();
   try {
-    await set(userDocRef, { Data });
+    if (!existingData) {
+      await set(userDocRef, { Data });
+      console.log("New user data added successfully!");
+    }
   } catch (error) {
     console.error("user Created Error ", error);
   }
   return userDocRef;
 };
-export const getInvoicesAndDocument = async () => {
+export const invoicesListener = async (uid) => {
+  const dispatch = useDispatch();
+  const invoicesRef = ref(db, `user/${uid}`);
+
+  const unsubscribe = onValue(invoicesRef, (snapshot) => {
+    const invoicesData = snapshot.val();
+    dispatch(fetchInvoicesSuccess(invoicesData));
+  });
+
+  return unsubscribe;
+};
+
+export const getInvoicesAndDocument = async (): Promise<{
+  Data: any[];
+  uid?: string;
+}> => {
   return new Promise((resolve, reject) => {
     const { currentUser } = store.getState().user;
     if (!currentUser) {
@@ -57,6 +78,24 @@ export const getInvoicesAndDocument = async () => {
       }
     );
   });
+};
+
+export const writeDataToDatabase = async (newData, userId) => {
+  try {
+    let defaultData = await getInvoicesAndDocument();
+
+    if (!defaultData) {
+      defaultData = { Data: [] };
+    }
+
+    defaultData.Data.push(newData);
+
+    await set(ref(db, `user/${userId}`), defaultData);
+
+    console.log("Data written to the database successfully!");
+  } catch (e) {
+    console.error("Error writing data to the database:", e);
+  }
 };
 
 export const signOutUser = async () => await signOut(Auth);
