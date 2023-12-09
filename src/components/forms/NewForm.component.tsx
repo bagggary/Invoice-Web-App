@@ -10,6 +10,11 @@ import ItemList from "../items/itemslist.component";
 import { useForm, useFieldArray, useWatch } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { FormValues } from "../types/types";
+import {
+  invoicesListener,
+  writeDataToDatabase,
+} from "../../util/firebase.util";
+import { selectCurrentUser } from "../../store/user/user.selector";
 const NewForm = () => {
   const ref = useRef<HTMLDivElement>(null);
   const toggleNewForm = useSelector(selectNewform);
@@ -49,6 +54,8 @@ const NewForm = () => {
   });
 
   const { register, control, handleSubmit, setValue, watch, formState } = form;
+  const dispatch = useDispatch();
+  const user = useSelector(selectCurrentUser);
 
   const { errors } = formState;
   function isObjEmpty(obj) {
@@ -82,8 +89,9 @@ const NewForm = () => {
     setValue("id", generateId());
   }, []);
 
-  const onSubmit = (data: FormValues) => {
-    console.log("form Submitted", data);
+  const onSubmit = async (data: FormValues) => {
+    await writeDataToDatabase(data, user && user.uid);
+    dispatch(setNewForm(false));
   };
   const { fields, append, remove } = useFieldArray({
     name: "items",
@@ -100,8 +108,6 @@ const NewForm = () => {
     const itemsField = { name: "", quantity: 0, price: 0, total: 0 };
     append(itemsField);
   };
-
-  const dispatch = useDispatch();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
