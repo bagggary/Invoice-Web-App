@@ -1,5 +1,3 @@
-import { createSelector } from "reselect";
-
 // export const selectInvoicesData = createSelector((state: { invoices: { invoicesMap: any } }) => state.invoices.invoicesMap.Data)
 export const selectInvoicesData = (state: { invoices: { invoicesMap: any } }) =>
   state.invoices.invoicesMap;
