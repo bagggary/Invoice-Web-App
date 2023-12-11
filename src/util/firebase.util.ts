@@ -14,6 +14,7 @@ import Data from "../assets/Data.json";
 import { store } from "../store/store";
 import { useDispatch } from "react-redux";
 import { fetchInvoicesSuccess } from "../store/invoice/invoice.action";
+import { useEffect } from "react";
 
 const firebaseConfig = {
   apiKey: import.meta.env.REACT_APP_API_KEY,
