@@ -12,9 +12,9 @@ import Data from "../assets/Data.json";
 // import { useSelector } from "react-redux";
 // import { selectCurrentUser } from "../store/user/user.selector";
 import { store } from "../store/store";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { selectCurrentUser } from "../store/user/user.selector";
 import { fetchInvoicesSuccess } from "../store/invoice/invoice.action";
-import { useEffect } from "react";
 
 const firebaseConfig = {
   apiKey: import.meta.env.REACT_APP_API_KEY,
@@ -45,17 +45,6 @@ export const createDocumentFromUserAuth = async (user: any) => {
   }
   return userDocRef;
 };
-export const invoicesListener = async (uid) => {
-  const dispatch = useDispatch();
-  const invoicesRef = ref(db, `user/${uid}`);
-
-  const unsubscribe = onValue(invoicesRef, (snapshot) => {
-    const invoicesData = snapshot.val();
-    dispatch(fetchInvoicesSuccess(invoicesData));
-  });
-
-  return unsubscribe;
-};
 
 export const getInvoicesAndDocument = async (): Promise<{
   Data: any[];
@@ -76,6 +65,7 @@ export const getInvoicesAndDocument = async (): Promise<{
       },
       (error) => {
         reject(error);
+        console.log(error);
       }
     );
   });
