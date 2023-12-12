@@ -3,8 +3,6 @@ import Authentication from "./routes/Authentication/Authentication.component";
 import "./index.css";
 import {
   createDocumentFromUserAuth,
-  db,
-  invoicesListener,
   onAuthStateChangedListener,
 } from "./util/firebase.util";
 import { useDispatch } from "react-redux";
@@ -13,34 +11,23 @@ import { Route, Routes } from "react-router-dom";
 import Main from "./routes/Main/Main.component";
 import Sidebar from "./components/sidebar/sidebar.component";
 import Details from "./routes/details/Details.component";
-import { ref, onValue } from "firebase/database";
 
 function App() {
   const dispatch = useDispatch();
+
   useEffect(() => {
-    const handleUserAuthentication = async (user) => {
+    const unsubscribe = onAuthStateChangedListener(async (user) => {
       if (user) {
         await createDocumentFromUserAuth(user);
-        const userDocRef = ref(db, `user/${user.uid}`);
-
-        const unsubscribe = onValue(userDocRef, (snapshot) => {
-          const data = snapshot.val();
-          // If the user has data, start listening for updates
-          invoicesListener(user.uid);
-        });
-        return unsubscribe;
-
-        dispatch(setCurrentUser(user));
       }
-    };
-
-    const unsubscribe = onAuthStateChangedListener(handleUserAuthentication);
+      dispatch(setCurrentUser(user));
+    });
 
     return () => {
-      // Unsubscribe when the component unmounts
       unsubscribe();
     };
-  }, [dispatch]);
+  }, []);
+
   //   useEffect(() => {
   //     const handleUserAuthentication = async (user) => {
   //       if (user) {
@@ -83,6 +70,8 @@ function App() {
   //       unsubscribe();
   //     };
   //   }, [dispatch]);
+
+  console.log("render from main component ");
 
   return (
     <div className=" bg-[#F8F8FB] dark:bg-black  ">
