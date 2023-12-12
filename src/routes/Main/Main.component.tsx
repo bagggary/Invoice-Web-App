@@ -1,16 +1,17 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 // import { selectIsLoadingData } from "../../store/invoice/invoice.selector";
 
 import { useNavigate } from "react-router-dom";
 import { selectCurrentUser } from "../../store/user/user.selector";
 import { useEffect } from "react";
 import Home from "../../components/home/home.component";
+import { db } from "../../util/firebase.util";
+import { onValue, ref } from "firebase/database";
+import { fetchInvoicesSuccess } from "../../store/invoice/invoice.action";
 
 const Main = () => {
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const Loading = useSelector(selectIsLoadingData);
-  // const Data = useSelector(selectInvoicesData);
   const user = useSelector(selectCurrentUser);
   // const signOutHandler = async () => {
   //   await signOutUser();
@@ -22,6 +23,18 @@ const Main = () => {
     if (!user) {
       navigate("/");
     }
+    const unsubscribe = () => {
+      const userRef = ref(db, `user/${user.uid}`);
+      const unsubscribe = onValue(userRef, (snapshot) => {
+        const data = snapshot.val();
+        dispatch(fetchInvoicesSuccess(data));
+      });
+      return unsubscribe;
+    };
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   return <Home />;
