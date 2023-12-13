@@ -17,9 +17,10 @@ export default function Invoices() {
 
   return (
     <div className="mt-16 flex flex-col gap-4">
-      {statusFilteredData?.map((invoicesData) => (
-        <Invoice key={invoicesData.id} data={invoicesData} />
-      ))}
+      {Array.isArray(statusFilteredData) &&
+        statusFilteredData.map((invoicesData) => (
+          <Invoice key={invoicesData.id} data={invoicesData} />
+        ))}
     </div>
   );
 }
