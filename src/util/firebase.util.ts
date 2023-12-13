@@ -7,7 +7,7 @@ import {
   onAuthStateChanged,
   signOut,
 } from "firebase/auth";
-import { get, getDatabase, onValue, ref, set } from "firebase/database";
+import { get, getDatabase, onValue, ref, remove, set } from "firebase/database";
 import Data from "../assets/Data.json";
 // import { useSelector } from "react-redux";
 // import { selectCurrentUser } from "../store/user/user.selector";
@@ -69,6 +69,14 @@ export const getInvoicesAndDocument = async (): Promise<{
       }
     );
   });
+};
+
+export const deleteFromDatase = (index, userId) => {
+  try {
+    remove(ref(db, `user/${userId}/Data/${index}`));
+  } catch (e) {
+    console.log("error :", e);
+  }
 };
 
 export const writeDataToDatabase = async (newData, userId) => {
