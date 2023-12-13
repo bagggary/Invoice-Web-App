@@ -1,18 +1,24 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import backArrow from "../../assets/icon-arrow-left.svg";
 import Status from "../../components/status/status.component";
 import Button from "../../components/button/Button.component";
 import { useSelector } from "react-redux";
 import { selectInvoicesData } from "../../store/invoice/invoice.selector";
 import Items from "../../components/items/items.component";
+import Delete from "../../components/delete/delete.component";
+import { useToggle } from "../../util/hooks/useToggle.hooks";
+import { selectCurrentUser } from "../../store/user/user.selector";
+import { deleteFromDatase } from "../../util/firebase.util";
 
 const Details = () => {
   const { Id } = useParams();
   const { Data } = useSelector(selectInvoicesData);
-  const invoiceData = Data?.filter((invoice) => {
-    return invoice.id === Id;
-  });
-
+  const invoiceData =
+    Data &&
+    Data?.filter((invoice) => {
+      return invoice.id === Id;
+    });
+  const [showDelete, setShowDelete] = useToggle();
   const {
     id,
     description,
@@ -27,9 +33,17 @@ const Details = () => {
     total,
   } = invoiceData[0];
   const { city, country, postCode, street } = senderAddress;
+  const user = useSelector(selectCurrentUser);
+  const navigate = useNavigate();
+
+  const handleDeletion = () => {
+    const indexOfObj = Data && Data.map((invoice) => invoice.id).indexOf(id);
+    deleteFromDatase(indexOfObj, user.uid);
+    navigate("/home");
+  };
 
   return (
-    <div className="md:pt-[72px] w-[90%] pt-[9rem]  md:pr-[5rem] md:min-w-[730px] md:pl-[5rem] lg:pl-0 md:w-[730px] py-14  mx-auto">
+    <div className="md:pt-[72px] w-[90%] pt-[9rem]  md:pr-[5rem] md:min-w-[730px] md:pl-[5rem] lg:pl-0 md:w-[730px] py-14  mx-auto ">
       <Link to=".." className="flex items-center gap-6 cursor-pointer ">
         <img src={backArrow} alt="back arrow" />
         <p className="font-bold text-sm hover:text-torko dark:text-white">
@@ -50,8 +64,12 @@ const Details = () => {
         </div>
         <div className=" fixed bottom-0  sm:bg-transparent w-full h-[5rem] left-0 justify-center bg-white dark:bg-blue-dark sm:w-auto  sm:static flex items-center">
           <div className="flex items-center gap-2">
-            <Button text="Edit" type="secondry" />
-            <Button text="Delete" type="danger" />
+            <Button text="Edit" type="secondry" handleChange={handleDeletion} />
+            <Button
+              text="Delete"
+              type="danger"
+              handleChange={() => setShowDelete.on()}
+            />
             <Button text="Mark as Paid" type="primary" />
           </div>
         </div>
@@ -184,6 +202,12 @@ const Details = () => {
           </div>
         </div>
       </div>
+      <Delete
+        visibility={showDelete}
+        setVisibility={setShowDelete}
+        id={id}
+        handleDeletion={handleDeletion}
+      />
     </div>
   );
 };
