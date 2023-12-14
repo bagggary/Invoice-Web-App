@@ -7,14 +7,13 @@ import {
   onAuthStateChanged,
   signOut,
 } from "firebase/auth";
-import { get, getDatabase, onValue, ref, remove, set } from "firebase/database";
+import { getDatabase, onValue, ref, remove, set } from "firebase/database";
 import Data from "../assets/Data.json";
 // import { useSelector } from "react-redux";
 // import { selectCurrentUser } from "../store/user/user.selector";
 import { store } from "../store/store";
-import { useDispatch, useSelector } from "react-redux";
-import { selectCurrentUser } from "../store/user/user.selector";
-import { fetchInvoicesSuccess } from "../store/invoice/invoice.action";
+
+import { FormValues } from "../components/types/types";
 
 const firebaseConfig = {
   apiKey: import.meta.env.REACT_APP_API_KEY,
@@ -46,10 +45,13 @@ export const createDocumentFromUserAuth = async (user: any) => {
   return userDocRef;
 };
 
-export const getInvoicesAndDocument = async (): Promise<{
-  Data: any[];
-  uid?: string;
-}> => {
+export const getInvoicesAndDocument = async (): Promise<
+  | {
+      Data: any[];
+      uid?: string;
+    }
+  | FormValues[]
+> => {
   return new Promise((resolve, reject) => {
     const { currentUser } = store.getState().user;
     if (!currentUser) {
@@ -57,11 +59,23 @@ export const getInvoicesAndDocument = async (): Promise<{
     }
     const { uid } = currentUser;
     const userRef = ref(db, `user/${uid}`);
+    let reconstructureData: FormValues[] = [];
 
     onValue(
       userRef,
       (snapshot) => {
-        resolve(snapshot.val());
+        // resolve(snapshot.val());
+        const { Data } = snapshot.val();
+        if (Array.isArray(Data)) {
+          reconstructureData = Data;
+        } else if (typeof Data === "object") {
+          Object.keys(Data).forEach((key) => {
+            reconstructureData.push(Data[key]);
+          });
+        } else {
+          reconstructureData = [];
+        }
+        resolve(reconstructureData);
       },
       (error) => {
         reject(error);
@@ -81,13 +95,12 @@ export const deleteFromDatase = (index, userId) => {
 
 export const writeDataToDatabase = async (newData, userId) => {
   try {
-    let defaultData = await getInvoicesAndDocument();
+    let defaultData: any = await getInvoicesAndDocument();
 
     if (!defaultData) {
       defaultData = { Data: [] };
     }
-
-    defaultData.Data.push(newData);
+    defaultData.push(newData);
 
     await set(ref(db, `user/${userId}`), defaultData);
 
