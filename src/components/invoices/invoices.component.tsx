@@ -5,20 +5,21 @@ import { useSearchParams } from "react-router-dom";
 
 export default function Invoices() {
   const invoicesData = useSelector(selectInvoicesData);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, _] = useSearchParams();
 
   const typedFilter = searchParams.get("status");
-  const statusFilteredData = typedFilter
-    ? invoicesData &&
-      invoicesData.Data.filter(
-        (stat) => stat.status === typedFilter?.toLowerCase()
-      )
-    : invoicesData && invoicesData.Data;
+  const statusFilteredData = Array.isArray(invoicesData)
+    ? typedFilter
+      ? invoicesData.filter(
+          (stat) => stat.status === typedFilter?.toLowerCase()
+        )
+      : invoicesData
+    : [];
 
   return (
     <div className="mt-16 flex flex-col gap-4">
-      {Array.isArray(statusFilteredData) &&
-        statusFilteredData.map((invoicesData) => (
+      {statusFilteredData &&
+        statusFilteredData?.map((invoicesData) => (
           <Invoice key={invoicesData.id} data={invoicesData} />
         ))}
     </div>
