@@ -7,7 +7,7 @@ import {
   onAuthStateChanged,
   signOut,
 } from "firebase/auth";
-import { getDatabase, onValue, ref, remove, set } from "firebase/database";
+import { get, getDatabase, onValue, ref, remove, set } from "firebase/database";
 import Data from "../assets/Data.json";
 // import { useSelector } from "react-redux";
 // import { selectCurrentUser } from "../store/user/user.selector";
@@ -33,11 +33,10 @@ export const createDocumentFromUserAuth = async (user: any) => {
   if (!user) return;
   const { uid } = user;
   const userDocRef = ref(db, `user/${uid}`);
-  const existingData = await getInvoicesAndDocument();
   try {
-    if (!existingData) {
+    const snapshot = await get(userDocRef);
+    if (!snapshot.exists()) {
       await set(userDocRef, { Data });
-      console.log("New user data added successfully!");
     }
   } catch (error) {
     console.error("user Created Error ", error);
@@ -72,8 +71,6 @@ export const getInvoicesAndDocument = async (): Promise<
           Object.keys(Data).forEach((key) => {
             reconstructureData.push(Data[key]);
           });
-        } else {
-          reconstructureData = [];
         }
         resolve(reconstructureData);
       },
@@ -85,11 +82,19 @@ export const getInvoicesAndDocument = async (): Promise<
   });
 };
 
-export const deleteFromDatase = (index, userId) => {
+export const deleteFromDatabase = (index: number, userId: string) => {
   try {
     remove(ref(db, `user/${userId}/Data/${index}`));
   } catch (e) {
     console.log("error :", e);
+  }
+};
+
+export const formatDataToDatabase = async (dataToFormat, userId) => {
+  try {
+    await set(ref(db, `user/${userId}`), dataToFormat);
+  } catch (error: Error | unknown) {
+    console.log("error : ", error);
   }
 };
 
@@ -98,11 +103,11 @@ export const writeDataToDatabase = async (newData, userId) => {
     let defaultData: any = await getInvoicesAndDocument();
 
     if (!defaultData) {
-      defaultData = { Data: [] };
+      defaultData = [];
     }
     defaultData.push(newData);
 
-    await set(ref(db, `user/${userId}`), defaultData);
+    await set(ref(db, `user/${userId}/Data`), defaultData);
 
     console.log("Data written to the database successfully!");
   } catch (e) {
