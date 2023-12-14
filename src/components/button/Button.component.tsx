@@ -1,12 +1,12 @@
 const Button = ({
   text,
   type,
-  handleStatus,
+  handleChange,
   status,
 }: {
   text: string;
   type: string;
-  handleStatus?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  handleChange?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   status?: string;
 }) => {
   const ButtonStyle = {
@@ -20,7 +20,7 @@ const Button = ({
   return (
     <button
       className={` px-6 py-4 ${ButtonStyle[type]} rounded-3xl font-bold text-sm outline-none`}
-      onClick={handleStatus}
+      onClick={handleChange}
       data-status={status}
     >
       {text}
