@@ -8,11 +8,11 @@ import Items from "../../components/items/items.component";
 import Delete from "../../components/delete/delete.component";
 import { useToggle } from "../../util/hooks/useToggle.hooks";
 import { selectCurrentUser } from "../../store/user/user.selector";
-import { deleteFromDatase } from "../../util/firebase.util";
+import { deleteFromDatabase } from "../../util/firebase.util";
 
 const Details = () => {
   const { Id } = useParams();
-  const { Data } = useSelector(selectInvoicesData);
+  const Data = useSelector(selectInvoicesData);
   const invoiceData =
     Data &&
     Data?.filter((invoice) => {
@@ -38,7 +38,7 @@ const Details = () => {
 
   const handleDeletion = () => {
     const indexOfObj = Data && Data.map((invoice) => invoice.id).indexOf(id);
-    deleteFromDatase(indexOfObj, user.uid);
+    deleteFromDatabase(indexOfObj, user.uid);
     navigate("/home");
   };
 
@@ -50,11 +50,6 @@ const Details = () => {
           Go back
         </p>
       </Link>
-      {/*  */}
-      {/*  */}
-      {/*  */}
-      {/*  */}
-      {/*  */}
       <div className="w-full bg-white dark:bg-blue-dark h-[88px] mt-8 rounded-lg flex justify-between px-8">
         <div className="flex  items-center w-full sm:w-auto">
           <p className=" font-medium text-sm text-[#858BB2] dark:text-gray-light">
