@@ -4,6 +4,7 @@ import { setNewForm } from "../../store/switch/switch.action";
 import StatusDropdown from "../statusDropdown/statusDropdown.component";
 
 const Header = () => {
+  console.log("render header component");
   const dispatch = useDispatch();
   return (
     <div className="flex justify-between items-center">

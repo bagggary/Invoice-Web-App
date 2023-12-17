@@ -10,10 +10,7 @@ import ItemList from "../items/itemslist.component";
 import { useForm, useFieldArray, useWatch } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { FormValues } from "../types/types";
-import {
-  invoicesListener,
-  writeDataToDatabase,
-} from "../../util/firebase.util";
+import { writeDataToDatabase } from "../../util/firebase.util";
 import { selectCurrentUser } from "../../store/user/user.selector";
 const NewForm = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -496,13 +493,13 @@ const NewForm = () => {
               </div>
               <div className="flex gap-2">
                 <Button
-                  handleStatus={(e) => handleStatus(e)}
+                  handleChange={(e) => handleStatus(e)}
                   type="draft"
                   text="Save as Draft"
                   status="draft"
                 />
                 <Button
-                  handleStatus={(e) => handleStatus(e)}
+                  handleChange={(e) => handleStatus(e)}
                   type="primary"
                   text="Save & Send"
                   status="pending"
