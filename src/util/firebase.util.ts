@@ -105,9 +105,11 @@ export const writeDataToDatabase = async (newData, userId) => {
     if (!defaultData) {
       defaultData = [];
     }
-    defaultData.push(newData);
+    // defaultData.push(newData);
 
-    await set(ref(db, `user/${userId}/Data`), defaultData);
+    // await set(ref(db, `user/${userId}/Data`), defaultData);
+    console.log("Previous Data Coming from the Database", defaultData);
+    console.log("New data to be added", newData);
 
     console.log("Data written to the database successfully!");
   } catch (e) {
