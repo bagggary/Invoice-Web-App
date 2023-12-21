@@ -14,6 +14,7 @@ import Data from "../assets/Data.json";
 import { store } from "../store/store";
 
 import { FormValues } from "../components/types/types";
+import firebase from "firebase/compat/app";
 
 const firebaseConfig = {
   apiKey: import.meta.env.REACT_APP_API_KEY,
@@ -82,9 +83,23 @@ export const getInvoicesAndDocument = async (): Promise<
   });
 };
 
-export const deleteFromDatabase = (index: number, userId: string) => {
+export const deleteFromDatabase = (id: string, userId: string) => {
   try {
-    remove(ref(db, `user/${userId}/Data/${index}`));
+    let data;
+    const { currentUser } = store.getState().user;
+    const { uid } = currentUser;
+    const userRef = ref(db, `user/${uid}`);
+    let dataKey;
+    onValue(userRef, (snapshot) => {
+      const { Data } = snapshot.val();
+      data = Data;
+    });
+    Object.entries(data).filter(([key, value]: any) => {
+      if (value.id === id) {
+        dataKey = key;
+      }
+    });
+    remove(ref(db, `user/${userId}/Data/${dataKey}`));
   } catch (e) {
     console.log("error :", e);
   }
@@ -105,13 +120,13 @@ export const writeDataToDatabase = async (newData, userId) => {
     if (!defaultData) {
       defaultData = [];
     }
-    // defaultData.push(newData);
+    defaultData.push(newData);
 
-    // await set(ref(db, `user/${userId}/Data`), defaultData);
+    await set(ref(db, `user/${userId}/Data`), defaultData);
     console.log("Previous Data Coming from the Database", defaultData);
     console.log("New data to be added", newData);
 
-    console.log("Data written to the database successfully!");
+    // console.log("Data written to the database successfully!");
   } catch (e) {
     console.error("Error writing data to the database:", e);
   }
