@@ -16,45 +16,9 @@ const NewForm = () => {
   const ref = useRef<HTMLDivElement>(null);
   const toggleNewForm = useSelector(selectNewform);
 
-  const form = useForm<FormValues>({
-    defaultValues: {
-      id: "",
-      createdAt: "",
-      paymentDue: "",
-      description: "",
-      paymentTerms: 1,
-      clientName: "",
-      clientEmail: "",
-      status: "",
-      senderAddress: {
-        street: "",
-        city: "",
-        postCode: "",
-        country: "",
-      },
-      clientAddress: {
-        street: "",
-        city: "",
-        postCode: "",
-        country: "",
-      },
-      items: [
-        {
-          name: "",
-          quantity: 0,
-          price: 0,
-          total: 0,
-        },
-      ],
-      total: 0,
-    },
-  });
-
-  const { register, control, handleSubmit, setValue, watch, formState } = form;
   const dispatch = useDispatch();
   const user = useSelector(selectCurrentUser);
 
-  const { errors } = formState;
   function isObjEmpty(obj) {
     return Object.keys(obj).length === 0;
   }
@@ -81,13 +45,48 @@ const NewForm = () => {
     }
     return id;
   };
-
-  useEffect(() => {
-    setValue("id", generateId());
-  }, []);
+  const defaultId = generateId();
+  const form = useForm<FormValues>({
+    defaultValues: {
+      [defaultId]: {
+        id: defaultId,
+        createdAt: "",
+        paymentDue: "",
+        description: "",
+        paymentTerms: 1,
+        clientName: "",
+        clientEmail: "",
+        status: "",
+        senderAddress: {
+          street: "",
+          city: "",
+          postCode: "",
+          country: "",
+        },
+        clientAddress: {
+          street: "",
+          city: "",
+          postCode: "",
+          country: "",
+        },
+        items: [
+          {
+            name: "",
+            quantity: 0,
+            price: 0,
+            total: 0,
+          },
+        ],
+        total: 0,
+      },
+    },
+  });
+  const { register, control, handleSubmit, setValue, watch, formState } = form;
+  const { errors } = formState;
 
   const onSubmit = async (data: FormValues) => {
-    await writeDataToDatabase(data, user && user.uid);
+    // await writeDataToDatabase(data, user && user.uid);
+    console.log(data);
     dispatch(setNewForm(false));
   };
   const { fields, append, remove } = useFieldArray({
