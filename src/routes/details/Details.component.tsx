@@ -38,7 +38,7 @@ const Details = () => {
 
   const handleDeletion = () => {
     const indexOfObj = Data && Data.map((invoice) => invoice.id).indexOf(id);
-    deleteFromDatabase(indexOfObj, user.uid);
+    deleteFromDatabase(id, user.uid);
     navigate("/home");
   };
 
