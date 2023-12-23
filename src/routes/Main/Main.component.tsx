@@ -5,15 +5,10 @@ import { useNavigate } from "react-router-dom";
 import { selectCurrentUser } from "../../store/user/user.selector";
 import { useEffect } from "react";
 import Home from "../../components/home/home.component";
-import {
-  db,
-  formatDataToDatabase,
-  writeDataToDatabase,
-} from "../../util/firebase.util";
+import { db } from "../../util/firebase.util";
 import { onValue, ref } from "firebase/database";
 import { fetchInvoicesSuccess } from "../../store/invoice/invoice.action";
 import { FormValues } from "../../components/types/types";
-import { set } from "date-fns";
 
 const Main = () => {
   const dispatch = useDispatch();
