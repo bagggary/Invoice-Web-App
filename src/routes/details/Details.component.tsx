@@ -18,6 +18,7 @@ const Details = () => {
     Data?.filter((invoice) => {
       return invoice.id === Id;
     });
+  console.log(invoiceData);
   const [showDelete, setShowDelete] = useToggle();
   const {
     id,
@@ -37,7 +38,7 @@ const Details = () => {
   const navigate = useNavigate();
 
   const handleDeletion = () => {
-    const indexOfObj = Data && Data.map((invoice) => invoice.id).indexOf(id);
+    // const indexOfObj = Data && Data.map((invoice) => invoice.id).indexOf(id);
     deleteFromDatabase(id, user.uid);
     navigate("/home");
   };
