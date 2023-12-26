@@ -1,4 +1,3 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import {
   NextOrObserver,
@@ -7,14 +6,20 @@ import {
   onAuthStateChanged,
   signOut,
 } from "firebase/auth";
-import { get, getDatabase, onValue, ref, remove, set } from "firebase/database";
+import {
+  get,
+  getDatabase,
+  onValue,
+  push,
+  ref,
+  remove,
+  set,
+} from "firebase/database";
 import Data from "../assets/Data.json";
-// import { useSelector } from "react-redux";
-// import { selectCurrentUser } from "../store/user/user.selector";
+
 import { store } from "../store/store";
 
 import { FormValues } from "../components/types/types";
-import firebase from "firebase/compat/app";
 
 const firebaseConfig = {
   apiKey: import.meta.env.REACT_APP_API_KEY,
@@ -60,6 +65,7 @@ export const getInvoicesAndDocument = async (): Promise<
     const { uid } = currentUser;
     const userRef = ref(db, `user/${uid}`);
     let reconstructureData: FormValues[] = [];
+    let filteredData;
 
     onValue(
       userRef,
@@ -69,32 +75,32 @@ export const getInvoicesAndDocument = async (): Promise<
         if (Array.isArray(Data)) {
           reconstructureData = Data;
         } else if (typeof Data === "object") {
-          Object.keys(Data).forEach((key) => {
-            reconstructureData.push(Data[key]);
-          });
+          reconstructureData = Object.values(Data);
         }
-        resolve(reconstructureData);
+        filteredData = reconstructureData.filter((p) => p);
+        resolve(filteredData);
       },
       (error) => {
         reject(error);
-        console.log(error);
+        console.log("error :", error);
       }
     );
   });
 };
 
-export const deleteFromDatabase = (id: string, userId: string) => {
+export const deleteFromDatabase = async (id: string, userId: string) => {
   try {
-    let data;
     const { currentUser } = store.getState().user;
     const { uid } = currentUser;
     const userRef = ref(db, `user/${uid}`);
-    let dataKey;
-    onValue(userRef, (snapshot) => {
-      const { Data } = snapshot.val();
-      data = Data;
-    });
-    Object.entries(data).filter(([key, value]: any) => {
+    const snapshot = await get(userRef);
+    const { Data } = snapshot.val();
+    let dataKey: string | undefined;
+    // onValue(userRef, (snapshot) => {
+    //   const { Data } = snapshot.val();
+    //   data = Data;
+    // });
+    Object.entries(Data).filter(([key, value]: any) => {
       if (value.id === id) {
         dataKey = key;
       }
@@ -104,7 +110,6 @@ export const deleteFromDatabase = (id: string, userId: string) => {
     console.log("error :", e);
   }
 };
-
 export const formatDataToDatabase = async (dataToFormat, userId) => {
   try {
     await set(ref(db, `user/${userId}`), dataToFormat);
@@ -115,18 +120,11 @@ export const formatDataToDatabase = async (dataToFormat, userId) => {
 
 export const writeDataToDatabase = async (newData, userId) => {
   try {
-    let defaultData: any = await getInvoicesAndDocument();
+    const invoiceListRef = ref(db, `user/${userId}/Data`);
+    const newInvoiceRef = push(invoiceListRef);
+    await set(newInvoiceRef, newData);
 
-    if (!defaultData) {
-      defaultData = [];
-    }
-    defaultData.push(newData);
-
-    await set(ref(db, `user/${userId}/Data`), defaultData);
-    console.log("Previous Data Coming from the Database", defaultData);
-    console.log("New data to be added", newData);
-
-    // console.log("Data written to the database successfully!");
+    console.log("Data written to the database successfully!");
   } catch (e) {
     console.error("Error writing data to the database:", e);
   }
