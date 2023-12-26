@@ -15,6 +15,8 @@ const Main = () => {
   const navigate = useNavigate();
   const user = useSelector(selectCurrentUser);
 
+  console.log(user);
+
   // const signOutHandler = async () => {
   //   await signOutUser();
   //   dispatch(clearInvoices());
@@ -31,13 +33,17 @@ const Main = () => {
       let filteredData;
       const unsubscribe = onValue(userRef, (snapshot) => {
         const { Data } = snapshot.val();
-        if (Array.isArray(Data)) {
-          updatedData = Data;
-        } else if (typeof Data === "object") {
-          updatedData = Object.values(Data);
+        if (Data) {
+          if (Array.isArray(Data)) {
+            updatedData = Data;
+          } else if (typeof Data === "object") {
+            updatedData = Object.values(Data);
+          }
+          filteredData = updatedData.filter((p) => p);
+          dispatch(fetchInvoicesSuccess(filteredData));
+        } else {
+          dispatch(fetchInvoicesSuccess([]));
         }
-        filteredData = updatedData.filter((p) => p);
-        dispatch(fetchInvoicesSuccess(filteredData));
         // console.log(filteredData);
       });
       return unsubscribe;
