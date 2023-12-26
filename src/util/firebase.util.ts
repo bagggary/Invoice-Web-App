@@ -96,10 +96,6 @@ export const deleteFromDatabase = async (id: string, userId: string) => {
     const snapshot = await get(userRef);
     const { Data } = snapshot.val();
     let dataKey: string | undefined;
-    // onValue(userRef, (snapshot) => {
-    //   const { Data } = snapshot.val();
-    //   data = Data;
-    // });
     Object.entries(Data).filter(([key, value]: any) => {
       if (value.id === id) {
         dataKey = key;
