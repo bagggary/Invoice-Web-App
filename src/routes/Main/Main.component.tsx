@@ -28,20 +28,17 @@ const Main = () => {
     const unsubscribe = () => {
       const userRef = ref(db, `user/${user.uid}`);
       let updatedData: FormValues[] = [];
-      // let reconstructedDatabaseArray: FormValues[] = [];
+      let filteredData;
       const unsubscribe = onValue(userRef, (snapshot) => {
         const { Data } = snapshot.val();
         if (Array.isArray(Data)) {
           updatedData = Data;
         } else if (typeof Data === "object") {
-          Object.keys(Data).forEach((key) => {
-            updatedData.push(Data[key]);
-            // reconstructedDatabaseArray.push(Data[key]);
-          });
+          updatedData = Object.values(Data);
         }
-        dispatch(fetchInvoicesSuccess(updatedData));
-        // if (!reconstructedDatabaseArray) return;
-        // formatDataToDatabase(reconstructedDatabaseArray, user.uid);
+        filteredData = updatedData.filter((p) => p);
+        dispatch(fetchInvoicesSuccess(filteredData));
+        // console.log(filteredData);
       });
       return unsubscribe;
     };
