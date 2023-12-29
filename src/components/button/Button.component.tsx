@@ -3,11 +3,13 @@ const Button = ({
   type,
   handleChange,
   status,
+  submitType,
 }: {
   text: string;
   type: string;
   handleChange?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   status?: string;
+  submitType: boolean;
 }) => {
   const ButtonStyle = {
     primary: " bg-primary hover:bg-secondry text-white",
@@ -22,6 +24,7 @@ const Button = ({
       className={` px-6 py-4 ${ButtonStyle[type]} rounded-3xl font-bold text-sm outline-none`}
       onClick={handleChange}
       data-status={status}
+      type={submitType ? `submit` : "button"}
     >
       {text}
     </button>
