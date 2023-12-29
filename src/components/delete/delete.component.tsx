@@ -31,8 +31,14 @@ export default function Delete({
               text="cancel"
               type="secondry"
               handleChange={() => setVisibility.off()}
+              submitType={false}
             />
-            <Button text="Delete" type="danger" handleChange={handleDeletion} />
+            <Button
+              text="Delete"
+              type="danger"
+              handleChange={handleDeletion}
+              submitType={false}
+            />
           </div>
         </div>
       </div>
