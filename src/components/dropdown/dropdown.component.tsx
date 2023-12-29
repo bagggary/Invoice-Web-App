@@ -3,7 +3,12 @@ import { ReactComponent as ArrowDown } from "../../assets/icon-arrow-down.svg";
 import { useToggle } from "../../util/hooks/useToggle.hooks";
 import { PaymentTypes } from "../types/types";
 
-const Dropdown: React.FC<PaymentTypes> = ({ watch, setValue }) => {
+const Dropdown: React.FC<PaymentTypes> = ({
+  watch,
+  setValue,
+  submitSuccessful,
+  reset,
+}) => {
   const [show, showDrop] = useToggle();
 
   const options = useMemo(
@@ -44,8 +49,12 @@ const Dropdown: React.FC<PaymentTypes> = ({ watch, setValue }) => {
   );
 
   useEffect(() => {
+    setValue("paymentDue", setPaymentDue(1));
+  }, [submitSuccessful, reset]);
+  useEffect(() => {
     setValue("paymentDue", setPaymentDue(value));
   }, [value]);
+
   return (
     <div className="flex gap-[10px] flex-col ">
       <label htmlFor="dropdown" className="text-torko font-medium text-sm ">
