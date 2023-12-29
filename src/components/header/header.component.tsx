@@ -1,11 +1,12 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import plusicon from "../../assets/icon-plus.svg";
 import { setNewForm } from "../../store/switch/switch.action";
 import StatusDropdown from "../statusDropdown/statusDropdown.component";
+import { selectInvoicesData } from "../../store/invoice/invoice.selector";
 
 const Header = () => {
-  console.log("render header component");
   const dispatch = useDispatch();
+  const invoiceData = useSelector(selectInvoicesData);
   return (
     <div className="flex justify-between items-center">
       <div>
@@ -13,7 +14,9 @@ const Header = () => {
           invoices
         </h1>
         <p className="text-sm font-medium text-dark-gray dark:text-gray-light">
-          No Invoices
+          {invoiceData.length > 0
+            ? `There are ${invoiceData.length} total invoices`
+            : `No invoices`}
         </p>
       </div>
       <div className="flex gap-10">
