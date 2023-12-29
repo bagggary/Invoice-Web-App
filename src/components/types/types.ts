@@ -71,42 +71,23 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 export type PaymentTypes = {
   watch: any;
   setValue: UseFormSetValue<FieldValues> | any;
+  submitSuccessful?: boolean;
+  reset?: <T>(
+    values?: T | ResetAction<T>,
+    options?: Record<string, boolean>
+  ) => void;
 };
+export type ResetAction<TFieldValues> = (
+  formValues: TFieldValues
+) => TFieldValues;
 
 export interface DateProps extends InputHTMLAttributes<HTMLInputElement> {
   setValue: UseFormSetValue<FieldValues> | any;
+  submitSuccessful?: boolean;
+  reset?: <T>(
+    values?: T | ResetAction<T>,
+    options?: Record<string, boolean>
+  ) => void;
+  disable?: boolean;
 }
 //createdAt: string , invoiceId : string
-export function defaultFields() {
-  return {
-    id: "",
-    createdAt: "",
-    paymentDue: "",
-    description: "",
-    paymentTerms: 0,
-    clientName: " ",
-    clientEmail: "",
-    status: "",
-    senderAddress: {
-      street: "",
-      city: "",
-      postCode: "",
-      country: "",
-    },
-    clientAddress: {
-      street: "",
-      city: "",
-      postCode: "",
-      country: "",
-    },
-    items: [
-      {
-        name: "",
-        quantity: 0,
-        price: 0,
-        total: 0,
-      },
-    ],
-    total: 0,
-  };
-}
