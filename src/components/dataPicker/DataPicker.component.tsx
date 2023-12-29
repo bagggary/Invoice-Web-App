@@ -6,7 +6,7 @@ import leftArrow from "../../assets/icon-arrow-left.svg";
 import { ReactComponent as Calender } from "../../assets/icon-calendar.svg";
 import { DateProps } from "../types/types";
 
-export const DatePicker: React.FC<DateProps> = ({ setValue }) => {
+export const DatePicker: React.FC<DateProps> = ({ setValue, disable }) => {
   const ref = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -106,7 +106,7 @@ export const DatePicker: React.FC<DateProps> = ({ setValue }) => {
   };
 
   return (
-    <div ref={ref} className="relative mb-6 ">
+    <div ref={ref} className={`relative mb-6  `}>
       <div className="flex flex-col gap-[10px]">
         <label
           htmlFor="invoice-date"
@@ -118,12 +118,17 @@ export const DatePicker: React.FC<DateProps> = ({ setValue }) => {
           <input
             ref={inputRef}
             placeholder={format(selectedDate, "dd MMM yyyy")}
-            className="h-[3rem] placeholder:text-black-1 dark:placeholder:text-white dark:border-blue-light dark:bg-blue-dark py-4 pl-5 w-full text-sm text-black-1 rounded-md border border-gray-light font-bold cursor-pointer"
+            className={` h-[3rem] placeholder:text-black-1 ${
+              disable ? "cursor-not-allowed" : "cursor-pointer"
+            }  dark:placeholder:text-white dark:border-blue-light dark:bg-blue-dark py-4 pl-5 w-full text-sm text-black-1 rounded-md border border-gray-light font-bold `}
             onFocus={openHandlers.on}
             type="text"
+            disabled={disable}
           />
           <Calender
-            className="absolute top-4 right-4 cursor-pointer"
+            className={`absolute top-4 right-4 cursor-pointer ${
+              disable ? "pointer-events-none" : ""
+            }`}
             onClick={openHandlers.on}
           />
         </div>
