@@ -3,3 +3,6 @@ export const selectToggleSwitch = (state: { theme: { dataTheme: boolean } }) =>
 
 export const selectNewform = (state: { theme: { newForm: boolean } }) =>
   state.theme.newForm;
+
+export const selectEditform = (state: { theme: { editForm: boolean } }) =>
+  state.theme.editForm;
