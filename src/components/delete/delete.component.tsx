@@ -1,7 +1,4 @@
 import Button from "../button/Button.component";
-type DeleteType = {
-  visibility: () => void;
-};
 
 export default function Delete({
   visibility,
