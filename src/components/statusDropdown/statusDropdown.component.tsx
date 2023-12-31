@@ -53,7 +53,7 @@ const StatusDropdown = () => {
       <div
         className={`absolute ${
           showStatus ? "translate-y-0  visible" : "-translate-y-4  invisible"
-        }  top-12 flex flex-col  gap-4 p-6 rounded-lg -left-1/3 bg-white dark:bg-blue-light w-[192px] shadow-[0px_10px_20px_0px_rgba(72,84,159,0.25)] dark:shadow-[0px_10px_20px_0px_rgba(0,0,0,0.25)]`}
+        }  top-12 flex flex-col  gap-4 p-6 rounded-lg z-30 -left-1/3 bg-white dark:bg-blue-light w-[192px] shadow-[0px_10px_20px_0px_rgba(72,84,159,0.25)] dark:shadow-[0px_10px_20px_0px_rgba(0,0,0,0.25)]`}
       >
         {status.map((stat) => {
           return (
