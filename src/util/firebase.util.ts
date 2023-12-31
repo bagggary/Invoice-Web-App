@@ -112,6 +112,11 @@ export const updateData = async (id: string, userId: string, dataToUpdate) => {
   }
 };
 
+export const paidStatus = async (id: string, userId: string) => {
+  const key = await dataKey(id);
+  await update(ref(db, `user/${userId}/Data/${key}`), { status: "paid" });
+};
+
 export const deleteFromDatabase = async (id: string, userId: string) => {
   try {
     const key = await dataKey(id);
