@@ -16,12 +16,28 @@ const Details = () => {
   const { Id } = useParams();
   const Data = useSelector(selectInvoicesData);
   const dispatch = useDispatch();
+  const user = useSelector(selectCurrentUser);
+  const navigate = useNavigate();
+  const [showDelete, setShowDelete] = useToggle();
+  const handleDeletion = () => {
+    deleteFromDatabase(id, user.uid);
+    navigate("/home");
+  };
+  const handleEdit = () => {
+    dispatch(setEditForm(true));
+  };
+  const handlePaid = async () => {
+    await paidStatus(id, user.uid);
+  };
+
+  if (!Data || !Array.isArray(Data)) {
+    return <p>...loading</p>;
+  }
   const invoiceData =
-    Data &&
-    Data?.filter((invoice) => {
+    Array.isArray(Data) &&
+    Data.filter((invoice) => {
       return invoice.id === Id;
     });
-  const [showDelete, setShowDelete] = useToggle();
   const {
     id,
     description,
@@ -36,20 +52,6 @@ const Details = () => {
     total,
   } = invoiceData[0];
   const { city, country, postCode, street } = senderAddress;
-  const user = useSelector(selectCurrentUser);
-  const navigate = useNavigate();
-
-  const handleDeletion = () => {
-    deleteFromDatabase(id, user.uid);
-    navigate("/home");
-  };
-  const handleEdit = () => {
-    dispatch(setEditForm(true));
-  };
-  const handlePaid = async () => {
-    await paidStatus(id, user.uid);
-  };
-  console.log(status);
 
   return (
     <>
