@@ -16,7 +16,7 @@ const sagaMiddleware = createSagaMiddleware();
 const persistConfig = {
   key: "root",
   storage,
-  blacklist: ["user"],
+  blacklist: ["invoices"],
 };
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

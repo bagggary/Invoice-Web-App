@@ -17,12 +17,12 @@ import {
   update,
 } from "firebase/database";
 import Data from "../assets/Data.json";
-
 import { store } from "../store/store";
-
 import { FormValues } from "../components/types/types";
 
-const firebaseConfig = {
+
+
+const firebaseConfig= {
   apiKey: import.meta.env.REACT_APP_API_KEY,
   authDomain: import.meta.env.REACT_APP_AUTH_DOMAIN,
   projectId: import.meta.env.REACT_APP_PROJECT_ID,
