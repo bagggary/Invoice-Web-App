@@ -32,7 +32,7 @@ export default function Invoices() {
         <img
           src={emtpyInvoice}
           alt="emptyInvoicesIllustration"
-          className=" mb-8"
+          className=" mb-8 z-[-10]"
         />
         <h4 className=" mb-4 text-xl font-bold text-center text-black-1 dark:text-white tracking-[-0.625px]">
           There is nothing here
