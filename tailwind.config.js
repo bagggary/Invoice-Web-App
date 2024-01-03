@@ -7,6 +7,12 @@ export default {
   ],
   theme: {
     extend: {
+      screens: {
+        md: "999px",
+      },
+      width: {
+        clamp: "clamp(20rem,87.5%,730px);",
+      },
       boxShadow: {
         "3xl": "0px 10px 20px 0px rgba(72, 84, 159, 0.25)",
       },
