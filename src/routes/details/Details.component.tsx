@@ -31,6 +31,7 @@ const Details = () => {
   };
 
   if (!Data || !Array.isArray(Data)) {
+    document.title = "...refreshing";
     return <p>...loading</p>;
   }
   const invoiceData =
@@ -52,10 +53,13 @@ const Details = () => {
     total,
   } = invoiceData[0];
   const { city, country, postCode, street } = senderAddress;
+  document.title = `Invoice #${id} | Invoice App`;
+
+  //md:pt-[72px] w-[90%] pt-[9rem]  md:pr-[5rem] md:min-w-[730px] md:pl-[5rem] lg:pl-0 md:w-[730px] py-14  mx-auto
 
   return (
-    <>
-      <div className="md:pt-[72px] w-[90%] pt-[9rem]  md:pr-[5rem] md:min-w-[730px] md:pl-[5rem] lg:pl-0 md:w-[730px] py-14  mx-auto ">
+    <div className="relative bg-light-BG min-h-screen pt-24 md:pt-16  ">
+      <div className=" py-4 w-clamp mx-auto">
         <Link to=".." className="flex items-center gap-6 cursor-pointer ">
           <img src={backArrow} alt="back arrow" />
           <p className="font-bold text-sm hover:text-torko dark:text-white">
@@ -221,7 +225,7 @@ const Details = () => {
         />
       </div>
       <EditForm invoiceData={invoiceData} />
-    </>
+    </div>
   );
 };
 
