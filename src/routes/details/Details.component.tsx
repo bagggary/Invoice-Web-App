@@ -3,7 +3,10 @@ import backArrow from "../../assets/icon-arrow-left.svg";
 import Status from "../../components/status/status.component";
 import Button from "../../components/button/Button.component";
 import { useDispatch, useSelector } from "react-redux";
-import { selectInvoicesData } from "../../store/invoice/invoice.selector";
+import {
+  selectInvoicesData,
+  selectIsLoadingData,
+} from "../../store/invoice/invoice.selector";
 import Items from "../../components/items/items.component";
 import Delete from "../../components/delete/delete.component";
 import { useToggle } from "../../util/hooks/useToggle.hooks";
@@ -11,12 +14,14 @@ import { selectCurrentUser } from "../../store/user/user.selector";
 import { deleteFromDatabase, paidStatus } from "../../util/firebase.util";
 import EditForm from "../../components/forms/editForm.component";
 import { setEditForm } from "../../store/switch/switch.action";
+import DetailsLoadingSkeleton from "../../components/loadingSkeleton/DetailsLoadingSkeleton.component";
 
 const Details = () => {
   const { Id } = useParams();
   const Data = useSelector(selectInvoicesData);
   const dispatch = useDispatch();
   const user = useSelector(selectCurrentUser);
+  const isLoading = useSelector(selectIsLoadingData);
   const navigate = useNavigate();
   const [showDelete, setShowDelete] = useToggle();
   const handleDeletion = () => {
@@ -29,10 +34,9 @@ const Details = () => {
   const handlePaid = async () => {
     await paidStatus(id, user.uid);
   };
-
-  if (!Data || !Array.isArray(Data)) {
-    document.title = "...refreshing";
-    return <p>...loading</p>;
+  if (!Data || !Array.isArray(Data) || isLoading) {
+    document.title = "...Refreshing";
+    return <DetailsLoadingSkeleton />;
   }
   const invoiceData =
     Array.isArray(Data) &&
@@ -58,7 +62,7 @@ const Details = () => {
   //md:pt-[72px] w-[90%] pt-[9rem]  md:pr-[5rem] md:min-w-[730px] md:pl-[5rem] lg:pl-0 md:w-[730px] py-14  mx-auto
 
   return (
-    <div className="relative bg-light-BG min-h-screen pt-24 md:pt-16  ">
+    <div className="relative bg-light-BG dark:bg-black min-h-screen pt-24 md:pt-16  ">
       <div className=" py-4 w-clamp mx-auto">
         <Link to=".." className="flex items-center gap-6 cursor-pointer ">
           <img src={backArrow} alt="back arrow" />
