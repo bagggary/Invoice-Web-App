@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectToggleSwitch } from "../../store/switch/switch.selector";
 import { setDarkTheme } from "../../store/switch/switch.action";
 import { useEffect } from "react";
-
+import { signOutUser } from "../../util/firebase.util";
 function Sidebar() {
   const switchToggler = useSelector(selectToggleSwitch);
   const dispatch = useDispatch();
@@ -22,6 +22,10 @@ function Sidebar() {
       `${switchToggler ? "dark" : "light"}`
     );
   }, [switchToggler]);
+
+  const handleLogOut = async () => {
+    await signOutUser();
+  };
 
   //class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
   return (
@@ -47,7 +51,12 @@ function Sidebar() {
             />
           </div>
           <div className=" group flex justify-center items-center md:py-6 md:border-t  border-r-0 border-[#494E6E] px-8 border-l md:relative">
-            <img src={logOut} alt="logOut" className=" h-6 cursor-pointer" />
+            <img
+              src={logOut}
+              alt="logOut"
+              className=" h-6 cursor-pointer"
+              onClick={handleLogOut}
+            />
             <div className="absolute -right-20 z-20 top-4 text-white bg-[#373B53] p-2 rounded-lg invisible group-hover:visible">
               Sign out
             </div>
