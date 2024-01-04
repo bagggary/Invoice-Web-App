@@ -1,14 +1,24 @@
 import { useSelector } from "react-redux";
 import Invoice from "../invoice/invoice.component";
-import { selectInvoicesData } from "../../store/invoice/invoice.selector";
+import {
+  selectInvoicesData,
+  selectIsLoadingData,
+} from "../../store/invoice/invoice.selector";
 import { useSearchParams } from "react-router-dom";
 import emtpyInvoice from "../../assets/illustration-empty.svg";
+import InvoiceLoadingSkeleton from "../loadingSkeleton/InvoiceLoadingSkeleton.component";
 
 export default function Invoices() {
   const invoicesData = useSelector(selectInvoicesData);
   const [searchParams, _] = useSearchParams();
+  const isLoading = useSelector(selectIsLoadingData);
 
   const typedFilter = searchParams.get("status");
+
+  if (isLoading || Object.keys(invoicesData).length === 0) {
+    return <InvoiceLoadingSkeleton />;
+  }
+
   const statusFilteredData = Array.isArray(invoicesData)
     ? typedFilter
       ? invoicesData.filter(
