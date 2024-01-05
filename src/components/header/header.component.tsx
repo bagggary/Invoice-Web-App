@@ -10,8 +10,8 @@ const Header = () => {
   return (
     <div className="flex justify-between items-center">
       <div>
-        <h1 className=" text-[20px]  sm:text-[32px] font-bold dark:text-white">
-          invoices
+        <h1 className=" text-[20px] tracking-[-1px]  sm:text-[32px] font-bold dark:text-white">
+          Invoices
         </h1>
         <p className="text-sm font-medium text-dark-gray dark:text-gray-light">
           {invoiceData.length > 0

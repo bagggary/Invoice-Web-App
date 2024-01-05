@@ -26,7 +26,7 @@ const Dropdown: React.FC<PaymentTypes> = ({
   const dropDownHandler = useCallback(() => {
     showDrop.toggle();
   }, [showDrop]);
-  const setPaymentDue = (paymentTerm) => {
+  const setPaymentDue = (paymentTerm : number) => {
     const invoiceDate = watch("createdAt");
     const dueDate = new Date(invoiceDate);
     dueDate.setDate(dueDate.getDate() + paymentTerm);

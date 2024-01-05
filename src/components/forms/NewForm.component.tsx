@@ -8,10 +8,10 @@ import { setNewForm } from "../../store/switch/switch.action";
 import backArrow from "../../assets/icon-arrow-left.svg";
 import ItemList from "../items/itemslist.component";
 import { useForm, useFieldArray, useWatch } from "react-hook-form";
-import { DevTool } from "@hookform/devtools";
 import { FormValues } from "../types/types";
-import { writeDataToDatabase } from "../../util/firebase.util";
 import { selectCurrentUser } from "../../store/user/user.selector";
+import { writeDataToDatabase } from "../../util/firebase.util";
+
 const NewForm = () => {
   const ref = useRef<HTMLDivElement>(null);
   const toggleNewForm = useSelector(selectNewform);
@@ -45,48 +45,65 @@ const NewForm = () => {
     }
     return id;
   };
-  const defaultId = generateId();
+  const todayDate = () => {
+    const initDate = new Date(Date.now());
+    const year = initDate.getFullYear();
+    const month = initDate.getMonth() + 1;
+    const day = initDate.getDate();
+    return `${year}-${month}-${day}`;
+  };
+
   const form = useForm<FormValues>({
     defaultValues: {
-      [defaultId]: {
-        id: defaultId,
-        createdAt: "",
-        paymentDue: "",
-        description: "",
-        paymentTerms: 1,
-        clientName: "",
-        clientEmail: "",
-        status: "",
-        senderAddress: {
-          street: "",
-          city: "",
-          postCode: "",
-          country: "",
-        },
-        clientAddress: {
-          street: "",
-          city: "",
-          postCode: "",
-          country: "",
-        },
-        items: [
-          {
-            name: "",
-            quantity: 0,
-            price: 0,
-            total: 0,
-          },
-        ],
-        total: 0,
+      id: generateId(),
+      createdAt: "",
+      paymentDue: "",
+      description: "",
+      paymentTerms: 1,
+      clientName: "",
+      clientEmail: "",
+      status: "",
+      senderAddress: {
+        street: "",
+        city: "",
+        postCode: "",
+        country: "",
       },
+      clientAddress: {
+        street: "",
+        city: "",
+        postCode: "",
+        country: "",
+      },
+      items: [
+        {
+          name: "",
+          quantity: 0,
+          price: 0,
+          total: 0,
+        },
+      ],
+      total: 0,
     },
   });
-  const { register, control, handleSubmit, setValue, watch, formState } = form;
-  const { errors } = formState;
+  const createdAt = todayDate();
+  const { register, control, handleSubmit, setValue, watch, formState, reset } =
+    form;
+  const { errors, isSubmitSuccessful } = formState;
+
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset();
+      setValue("id", generateId());
+    }
+  }, [isSubmitSuccessful, reset]);
+
+  useEffect(() => {
+    setValue("createdAt", createdAt);
+  }, [isSubmitSuccessful, reset]);
 
   const onSubmit = async (data: FormValues) => {
-    // await writeDataToDatabase(data, user && user.uid);
-    console.log(data);
+    await writeDataToDatabase(data, user.uid);
     dispatch(setNewForm(false));
   };
   const { fields, append, remove } = useFieldArray({
@@ -425,7 +442,12 @@ const NewForm = () => {
             </div>
             <div className="flex flex-col ">
               <DatePicker setValue={setValue} />
-              <Dropdown setValue={setValue} watch={watch} />
+              <Dropdown
+                setValue={setValue}
+                watch={watch}
+                submitSuccessful={isSubmitSuccessful}
+                reset={() => reset()}
+              />
             </div>
             <div className="flex flex-col gap-[10px relative">
               <label
@@ -488,7 +510,7 @@ const NewForm = () => {
             {/* */}
             <div className="w-full flex justify-between items-center">
               <div>
-                <Button type="secondry" text="Discard" />
+                <Button type="secondry" text="Discard" submitType={false} />
               </div>
               <div className="flex gap-2">
                 <Button
@@ -496,18 +518,19 @@ const NewForm = () => {
                   type="draft"
                   text="Save as Draft"
                   status="draft"
+                  submitType={true}
                 />
                 <Button
                   handleChange={(e) => handleStatus(e)}
                   type="primary"
                   text="Save & Send"
                   status="pending"
+                  submitType={true}
                 />
               </div>
             </div>
           </div>
         </form>
-        <DevTool control={control} />
       </div>
       <div
         className={` inset-0 top-0 left-0 w-full ${
