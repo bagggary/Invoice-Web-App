@@ -25,7 +25,7 @@ const Invoice: React.FC<InvoiceProps> = ({ data }) => {
   return (
     <Link
       to={`/home/${id}`}
-      className=" border dark:bg-blue-dark hover:border-solid hover:shadow-none border-transparent duration-200 ease-linear hover:border-primary flex flex-col sm:flex-row justify-between sm:items-center pl-8 pr-6 py-6 rounded-lg cursor-pointer"
+      className=" border dark:bg-blue-dark bg-white shadow-[0px_10px_10px_-10px_rgba(72,84,159,0.10);] hover:border-solid hover:shadow-none border-transparent duration-200 ease-linear hover:border-primary flex flex-col sm:flex-row justify-between sm:items-center pl-8 pr-6 py-6 rounded-lg cursor-pointer"
     >
       <div className="flex justify-between items-center sm:mr-[2em]">
         <div className=" text-sm font-bold sm:mr-[1.75rem] dark:text-white text-black-1 ">
