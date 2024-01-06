@@ -1,4 +1,4 @@
-import NewForm from "../forms/NewForm.component";
+import NewForm from "../forms/newForm.component";
 import Header from "../header/header.component";
 import Invoices from "../invoices/invoices.component";
 
