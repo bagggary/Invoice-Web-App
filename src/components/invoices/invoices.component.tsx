@@ -15,17 +15,18 @@ export default function Invoices() {
 
   const typedFilter = searchParams.get("status");
 
-  if (isLoading || Object.keys(invoicesData).length === 0) {
-    return <InvoiceLoadingSkeleton />;
-  }
-
   const statusFilteredData = Array.isArray(invoicesData)
     ? typedFilter
       ? invoicesData.filter(
           (stat) => stat.status === typedFilter?.toLowerCase()
         )
       : invoicesData
-    : [];
+    : null;
+  console.log(statusFilteredData);
+
+  if (isLoading) {
+    return <InvoiceLoadingSkeleton />;
+  }
 
   if (invoicesData.length > 0) {
     return (
