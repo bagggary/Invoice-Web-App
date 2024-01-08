@@ -13,6 +13,9 @@ export default {
       width: {
         clamp: "clamp(20rem,87.5%,730px);",
       },
+      backgroundImage: {
+        auth: "url('./assets/auth-image.jpg')",
+      },
       boxShadow: {
         "3xl": "0px 10px 20px 0px rgba(72, 84, 159, 0.25)",
       },
