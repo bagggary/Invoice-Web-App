@@ -3,6 +3,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { Auth, createDocumentFromUserAuth } from "../../util/firebase.util";
 import { MdOutlineEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
+import Alert from "../mis/alert.component";
 
 const SignUp = ({
   status,
@@ -23,11 +24,19 @@ const SignUp = ({
     confirmPassword: "",
   };
   const [formFields, setFormFields] = useState(defaultFormFields);
+  const [alert, setAlert] = useState({
+    success: "",
+    failed: "",
+  });
 
   const resetFormFields = (): void => {
     setFormFields(defaultFormFields);
   };
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setAlert({
+      success: "",
+      failed: "",
+    });
     const { value, name } = e.target;
     setFormFields((prev) => {
       return {
@@ -43,7 +52,13 @@ const SignUp = ({
     e.preventDefault();
     const { email, password, confirmPassword } = formFields;
     if (password !== confirmPassword) {
-      alert("Password doesn't match ");
+      setAlert((prev) => {
+        return {
+          ...prev,
+          failed: "Password doesn't match ",
+        };
+      });
+      return;
     }
     try {
       const createUser = await createUserWithEmailAndPassword(
@@ -53,8 +68,20 @@ const SignUp = ({
       );
       const { user } = createUser;
       await createDocumentFromUserAuth(user);
-    } catch (error) {
+      setAlert((prev) => {
+        return {
+          ...prev,
+          success: "Thanks for signing up. Your account has been created",
+        };
+      });
+    } catch (error: any) {
       console.error("unhandled Error", error);
+      setAlert((prev) => {
+        return {
+          ...prev,
+          failed: error.message,
+        };
+      });
     }
     resetFormFields();
   };
@@ -64,37 +91,54 @@ const SignUp = ({
         !status ? "opacity-100" : "opacity-0 hidden "
       }`}
     >
+      <div>
+        {alert.success && <Alert type="success" message={alert.success} />}
+        {alert.failed && <Alert type="failed" message={alert.failed} />}
+      </div>
       <div className="relative flex items-center mt-8">
         <MdOutlineEmail className="absolute w-6 h-6 mx-3 text-gray-300 dark:text-gray-500" />
         <input
+          onChange={changeHandler}
           type="email"
+          name="email"
           className="block w-full  px-10 py-3 text-gray-700 bg-white border rounded-lg dark:bg-gray-900 dark:text-gray-300 dark:border-primary focus:border-secondry dark:focus:border-secondry focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
           placeholder="Email"
+          value={formFields.email}
         />
       </div>
 
       <div className="relative flex items-center mt-4">
         <RiLockPasswordFill className="absolute w-6 h-6 mx-3 text-gray-300 dark:text-gray-500" />
         <input
+          onChange={changeHandler}
           type="password"
+          name="password"
           className="block w-full  px-10 py-3 text-gray-700 bg-white border rounded-lg dark:bg-gray-900 dark:text-gray-300 dark:border-primary focus:border-secondry dark:focus:border-secondry focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
           placeholder="Password"
           id="password"
+          value={formFields.password}
         />
       </div>
 
       <div className="relative flex items-center mt-4">
         <RiLockPasswordFill className="absolute w-6 h-6 mx-3 text-gray-300 dark:text-gray-500" />
         <input
+          onChange={changeHandler}
           type="password"
+          name="confirmPassword"
           className="block w-full  px-10 py-3 text-gray-700 bg-white border rounded-lg dark:bg-gray-900 dark:text-gray-300 dark:border-primary focus:border-secondry dark:focus:border-secondry focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
           placeholder="Confirm Password"
-          id="confirmpassword"
+          id="confirmPassword"
+          value={formFields.confirmPassword}
         />
       </div>
 
       <div className="mt-6">
-        <button className="w-full text-white  bg-primary hover:bg-secondry   font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary dark:hover:bg-secondry  cursor-pointer">
+        <button
+          onClick={submitHandler}
+          type="button"
+          className="w-full text-white  bg-primary hover:bg-secondry   font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary dark:hover:bg-secondry  cursor-pointer"
+        >
           Sign Up
         </button>
 
