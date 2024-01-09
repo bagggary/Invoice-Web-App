@@ -17,6 +17,8 @@ import { onValue, ref } from "firebase/database";
 import { selectCurrentUser } from "./store/user/user.selector";
 import { FormValues } from "./components/types/types";
 import { fetchInvoicesSuccess } from "./store/invoice/invoice.action";
+import Reset from "./components/mis/reset.component";
+import NotFound from "./components/mis/404.component";
 
 function App() {
   const dispatch = useDispatch();
@@ -35,36 +37,28 @@ function App() {
   }, []);
 
   const user = useSelector(selectCurrentUser);
-
   useEffect(() => {
-    const unsubscribe = () => {
-      const userRef = ref(db, `user/${user && user.uid}`);
-      let updatedData: FormValues[] = [];
-      let filteredData: FormValues[] | [];
-      const unsubscribe = onValue(userRef, (snapshot) => {
-        if (!snapshot.exists()) {
-          return;
+    const userRef = ref(db, `user/${user && user.uid}`);
+    let updatedData: FormValues[] = [];
+    let filteredData: FormValues[] | [];
+    const unsubscribe = onValue(userRef, (snapshot) => {
+      const { Data } = snapshot.val();
+      console.log("data from snapshot", Data);
+      if (Data) {
+        if (Array.isArray(Data)) {
+          updatedData = Data;
+        } else if (typeof Data === "object") {
+          updatedData = Object.values(Data);
         }
-        const { Data } = snapshot.val();
-        if (Data) {
-          if (Array.isArray(Data)) {
-            updatedData = Data;
-          } else if (typeof Data === "object") {
-            updatedData = Object.values(Data);
-          }
-          filteredData = updatedData.filter((p) => p);
-          dispatch(fetchInvoicesSuccess(filteredData));
-        } else {
-          dispatch(fetchInvoicesSuccess([]));
-        }
-      });
-      return unsubscribe;
-    };
+        filteredData = updatedData.filter((p) => p);
+        dispatch(fetchInvoicesSuccess(filteredData));
+      } else {
+        dispatch(fetchInvoicesSuccess([]));
+      }
+    });
 
-    return () => {
-      unsubscribe();
-    };
-  }, []);
+    return () => unsubscribe();
+  }, [user]);
 
   return (
     <div className=" bg-[#F8F8FB] dark:bg-black  ">
@@ -88,6 +82,8 @@ function App() {
             }
           />
         </Route>
+        <Route path="/resetPassword" element={<Reset />}></Route>
+        <Route path="*" element={<NotFound />}></Route>
       </Routes>
     </div>
   );
