@@ -4,9 +4,10 @@ import { Auth, createDocumentFromUserAuth } from "../../util/firebase.util";
 import { useDispatch } from "react-redux";
 import { setCurrentUser } from "../../store/user/user.action";
 import { fetchInvoicesStart } from "../../store/invoice/invoice.action";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { MdOutlineEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
+import Alert from "../mis/alert.component";
 
 const SignIn = ({
   status,
@@ -15,6 +16,10 @@ const SignIn = ({
   status: boolean;
   setStatus: (status: boolean) => void;
 }) => {
+  const [alert, setAlert] = useState({
+    success: "",
+    failed: "",
+  });
   const navigate = useNavigate();
   const dispatch = useDispatch();
   type SignInTypes = {
@@ -28,6 +33,10 @@ const SignIn = ({
   const [signInForm, setSignInForm] = useState(defaultFields);
 
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAlert({
+      success: "",
+      failed: "",
+    });
     const { name, value } = e.target;
     setSignInForm((prev) => {
       return {
@@ -41,7 +50,7 @@ const SignIn = ({
     setSignInForm(defaultFields);
   };
 
-  const sumbitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+  const sumbitHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const { email, password } = signInForm;
     try {
@@ -50,10 +59,16 @@ const SignIn = ({
       navigate("/home");
       await createDocumentFromUserAuth(user);
       dispatch(fetchInvoicesStart());
-    } catch (error) {
+      resetFormFields();
+    } catch (error: any) {
       console.error(error);
+      setAlert((prev) => {
+        return {
+          ...prev,
+          failed: error.message,
+        };
+      });
     }
-    resetFormFields();
   };
 
   return (
@@ -62,38 +77,47 @@ const SignIn = ({
         status ? "opacity-100" : "opacity-0"
       }`}
     >
+      <div>
+        {alert.success && <Alert type="success" message={alert.success} />}
+        {alert.failed && <Alert type="failed" message={alert.failed} />}
+      </div>
       <div className="relative flex items-center mt-8">
         <MdOutlineEmail className="absolute w-6 h-6 mx-3 text-gray-300 dark:text-gray-500 " />
         <input
+          onChange={changeHandler}
           type="email"
-          name="Email"
+          name="email"
           id="email"
           className="block w-full  px-10 py-3 text-gray-700 bg-white border rounded-lg dark:bg-gray-900 dark:text-gray-300 dark:border-primary focus:border-secondry dark:focus:border-secondry focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
           placeholder="Email"
+          value={signInForm.email}
         />
       </div>
       <div className="relative flex items-center mt-4">
         <RiLockPasswordFill className="absolute w-6 h-6 mx-3 text-gray-300 dark:text-gray-500 " />
         <input
+          onChange={changeHandler}
           type="password"
           name="password"
           className="block w-full  px-10 py-3 text-gray-700 bg-white border rounded-lg dark:bg-gray-900 dark:text-gray-300 dark:border-primary focus:border-secondry dark:focus:border-secondry focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
           placeholder="Password"
           id="password"
+          value={signInForm.password}
         />
       </div>
 
       <div className="flex items-center justify-between">
-        <a
-          href="#"
+        <Link
+          to={"/resetPassword"}
           className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500 dark:text-gray-300"
         >
           Forgot password?
-        </a>
+        </Link>
       </div>
       <button
         type="button"
         className="w-full text-white  bg-primary hover:bg-secondry   font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary dark:hover:bg-secondry  cursor-pointer"
+        onClick={sumbitHandler}
       >
         Sign in
       </button>
