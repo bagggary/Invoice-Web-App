@@ -1,6 +1,4 @@
-// import { initializeApp } from "firebase/app";
 import firebase from "firebase/compat/app";
-// import { initializeApp } from "../../node_modules/firebase/app";
 import {
   NextOrObserver,
   User,
