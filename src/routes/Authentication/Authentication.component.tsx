@@ -18,23 +18,11 @@ const Authentication = () => {
   useEffect(() => {
     signOutHandler();
   }, []);
-  const toggleForm = () => {
-    setLoginStatus(!loginStatus);
-  };
-
-  // modify these styles to match the primary color of the app
-
-  // background-image: url(/src/assets/auth-image.jpg);
-  // background-size: cover;
-  // background-repeat: no-repeat;
-  // background-blend-mode: multiply;
-  // background-color: #7C5DFA;
-
   return (
     <div className=" bg-auth bg-cover bg-no-repeat bg-blend-multiply bg-primary ">
       <div className=" flex flex-col gap-4 items-center justify-center h-screen transition-opacity">
         <img src={logo} alt="invoice app logo" className="w-auto h-10" />
-        <div className=" p-8 backdrop-blur-sm  rounded shadow-lg transition-all duration-300">
+        <div className=" p-8 backdrop-blur-3xle  rounded shadow-lg transition-all duration-300">
           <div
             className={`flex relative items-center justify-center mt-6 after:transition-all after:absolute after:w-1/4 after:h-[2px] ${
               loginStatus ? "after:-translate-x-11 " : "after:translate-x-11 "

@@ -2,18 +2,16 @@
   "compilerOptions": {
     "target": "ESNext",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "module": "ESNext",
+    "module" : "ESNext" ,
     "skipLibCheck": true,
-
-    "types": ["vite-plugin-svgr/client"] ,
-
-    /* Bundler mode */
+    "types": ["vite-plugin-svgr/client" , "jest" , "node"] ,
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
+    "allowSyntheticDefaultImports": true,
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
@@ -21,6 +19,10 @@
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": false
   },
-  "include": ["src"],
+  "include": ["src" , "./jest.setup.ts"],
+  "exclude": [
+    "test.ts",
+    "**/*.spec.ts"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

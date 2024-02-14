@@ -535,7 +535,7 @@ const NewForm = () => {
       <div
         className={` inset-0 top-0 left-0 w-full ${
           toggleNewForm ? "fixed" : "hidden"
-        } overflow-hidden transition-opacity bg-[rgb(0,0,0,.5)]`}
+        } overflow-hidden transition-all bg-[rgb(0,0,0,.5)]`}
       ></div>
     </>
   );

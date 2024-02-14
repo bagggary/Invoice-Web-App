@@ -21,7 +21,7 @@ const persistConfig = {
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const middleWare = [
-  import.meta.env.NODE_ENV !== "productoin" && logger,
+  process.env.NODE_ENV !== "productoin" && logger,
   sagaMiddleware,
 ].filter((middleware): middleware is Middleware => Boolean(middleware));
 
