@@ -62,7 +62,6 @@ Users should be able to:
 - [Redux](https://redux.js.org/) - State Management
 - [Redu-saga](https://redux-saga.js.org/) - Redux side effect manager.
 - [Firebase](https://firebase.google.com/docs/database) - realtime database
--
 
 ### What I learned
 
@@ -87,3 +86,4 @@ In future projects, I aim to further enhance the performance and optimization of
 ## Author
 
 - Twitter - [@bbaggary](https://www.twitter.com/bbaggary)
+- frontendmentor - [@bagggary](https://www.frontendmentor.io/profile/bagggary)
