@@ -27,7 +27,6 @@ function Sidebar() {
     await signOutUser();
   };
 
-  //class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
   return (
     <>
       <aside className=" md:z-10 z-10  fixed bg-blue-light md:h-screen md:left-0 top-0  h-20 md:w-[103px] w-full  md:rounded-r-[20px] flex md:flex-col justify-between">

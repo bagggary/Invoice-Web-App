@@ -21,9 +21,7 @@ export default function InvoiceLoadingSkeleton() {
                   <span className="h-6 bg-[#F1F5F9] w-40 block"></span>
                 </div>
               </div>
-              <div className="flex self-end items-center ">
-                {/* Add additional loading elements here if needed */}
-              </div>
+              <div className="flex self-end items-center "></div>
             </div>
           </div>
         </div>

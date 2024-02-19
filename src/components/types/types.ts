@@ -35,21 +35,10 @@ export type FormValues = {
       quantity: number;
       price: number;
       total: number;
-    }
+    },
   ];
   total: number;
 };
-// export type ItemTypeProps = {
-//   index: number;
-//   register: UseFormRegister<FieldValues>;
-// };
-// export interface InputProps extends Partial<Pick<UseFormReturn, "register">> {
-//   rules?: ValidationRule;
-//   index: number;
-//   register: UseFormRegister<FieldValues>;
-
-//   // type: "text" | "email" | "number";
-// }
 export type FieldTypes = {
   name: string;
   price: number;
